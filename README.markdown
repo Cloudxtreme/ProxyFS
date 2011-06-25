@@ -18,13 +18,24 @@ $ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby
 
 $ modprobe fuse
 
-Edit the config file
+Edit the config file. It looks like:
+
+<code>
+local_path: /home/hkf/sync_local
+mount_point: /home/flakks/mnt
+
+mirrors:
+  mirror1:
+    host: 127.0.0.1
+    user: hkf
+    path: /home/hkf/sync
+</code>
 
 $ ruby main.rb config.yml
 
 ## Use Cases
 
-Say you have two multiple webservers and directories with a large collection of rather static files.
+Say you have multiple webservers and directories with a large collection of rather static files.
 You want both servers to have the same content within these directories.
 
 Now, you have multiple options to replicate/synchronize these directories
@@ -45,5 +56,7 @@ Unfortunately, these tools can IMHO get out of sync easily.
 
 Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory live.
 The write will go to all mirrors or none. Can be used with WAN connections! As the writes are synchronously written, the performance 
-will differ for different connections.
+will differ for different connections. Proxyfs assumes to be all mirrors in sync when Proxyfs starts. Therfore, you'll have to
+initially use rsync one time, for example.
+
 
