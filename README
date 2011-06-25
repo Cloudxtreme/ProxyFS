@@ -1,5 +1,6 @@
 
-# proxyfs
+proxyfs
+=======
 
 Creates a proxy filesystem using fuse for ruby to mount a mirror of a local directory.
 Using the proxy mountpoint, changes to the files will be distributed to remote mirrors automatically.
