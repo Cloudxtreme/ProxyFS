@@ -1,9 +1,9 @@
 
-local_path: /usr/share/doc
-mount_point: /home/vetter/mnt
+local_path: /home/hkf/sync_local
+mount_point: /home/flakks/mnt
 
 mirrors:
   mirror1:
     host: 127.0.0.1
     user: hkf
-    path: /root/sync 
+    path: /home/hkf/sync
