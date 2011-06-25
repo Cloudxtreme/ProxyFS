@@ -14,24 +14,29 @@ It will possibly delete all your files :-)
 
 Currently only Debian supported (within this README)
 
-$ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby
-
-$ modprobe fuse
+<pre>
+  $ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby
+  $ modprobe fuse
+</pre>
 
 Edit the config file. It looks like:
 
 <pre>
-local_path: /home/hkf/sync_local
-mount_point: /home/flakks/mnt
+  local_path: /home/hkf/sync_local
+  mount_point: /home/flakks/mnt
 
-mirrors:
-  mirror1:
-    host: 127.0.0.1
-    user: hkf
-    path: /home/hkf/sync
+  mirrors:
+    mirror1:
+      host: 127.0.0.1
+      user: hkf
+      path: /home/hkf/sync
 </pre>
 
-$ ruby main.rb config.yml
+Run:
+
+<pre>
+  $ ruby main.rb config.yml
+</pre>
 
 ## Use Cases
 
