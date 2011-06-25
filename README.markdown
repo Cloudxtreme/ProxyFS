@@ -15,6 +15,7 @@ It will possibly delete all your files :-)
 Currently only Debian supported (within this README)
 
 $ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby
+
 $ modprobe fuse
 
 Edit the config file
@@ -40,7 +41,7 @@ Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
 
 Unfortunately, these tools can IMHO get out of sync easily.
 
-- ** Proxyfs **
+- **Proxyfs**
 
 Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory live.
 The write will go to all mirrors or none. Can be used with WAN connections! As the writes are synchronously written, the performance 
