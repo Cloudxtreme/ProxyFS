@@ -20,7 +20,7 @@ $ modprobe fuse
 
 Edit the config file. It looks like:
 
-<code>
+<pre>
 local_path: /home/hkf/sync_local
 mount_point: /home/flakks/mnt
 
@@ -29,7 +29,7 @@ mirrors:
     host: 127.0.0.1
     user: hkf
     path: /home/hkf/sync
-</code>
+</pre>
 
 $ ruby main.rb config.yml
 
