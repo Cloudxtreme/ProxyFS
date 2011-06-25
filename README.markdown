@@ -19,7 +19,7 @@ Currently only Debian supported (within this README)
   $ modprobe fuse
 </pre>
 
-Edit the config file. It looks like:
+Edit the YAML config file. It looks like:
 
 <pre>
   local_path: /home/hkf/sync_local
@@ -53,7 +53,7 @@ Unfortunately, rsync can't replicate/synchronize the files in a 'live' manner.
 
 Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
 
-- lsyncd or other inode based replication/synchronization tools
+- lsyncd or other inotify based replication/synchronization tools
 
 Unfortunately, these tools can IMHO get out of sync easily.
 
