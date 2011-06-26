@@ -4,8 +4,6 @@ require File.dirname(__FILE__) + "/proxyfs/try"
 module ProxyFS
   class ProxyFS
     def initialize(base)
-      LOGGER.info "starting"
-
       @base = base
     end
 
@@ -45,7 +43,7 @@ module ProxyFS
       end
 
       transaction.local do
-        Try.to(msg("write", path)) do
+        Try.to(msg("write_to #{str.size} bytes", path)) do
           open(File.join(@base, path), "w") do |stream|
             stream.write str
           end
@@ -57,8 +55,6 @@ module ProxyFS
       end
 
       transaction.run
-    rescue Exception => e
-      LOGGER.error e.to_s
     end
 
     def can_delete?(path)
@@ -83,8 +79,6 @@ module ProxyFS
       end
 
       transaction.run
-    rescue Exception => e
-      LOGGER.error e.to_s
     end
 
     def can_mkdir?(path)
@@ -109,8 +103,6 @@ module ProxyFS
       end
 
       transaction.run
-    rescue Exception => e
-      LOGGER.error e.to_s
     end
 
     def can_rmdir?(path)
@@ -135,12 +127,6 @@ module ProxyFS
       end
 
       transaction.run
-    rescue Exception => e
-      LOGGER.error e.to_s
-    end
-
-    def touch(path)
-      # nothing
     end
 
     private

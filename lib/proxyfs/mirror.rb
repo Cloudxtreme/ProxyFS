@@ -1,17 +1,18 @@
 
 require "net/sftp"
 require "timeout"
+require "stringio"
 require File.dirname(__FILE__) + "/try"
 require File.dirname(__FILE__) + "/out_of_sync_exception"
 
 module ProxyFS
   class Mirror
-    def initialize(user, host, path, tries, timeout)
+    def initialize(user, host, path, times, wait, timeout)
       @user = user
       @host = host
       @base = path
 
-      @tries = tries
+      @tries = { :times => times, :wait => wait }
       @timeout = timeout
     end
 
@@ -40,13 +41,15 @@ module ProxyFS
     end
 
     def write_to(path, str)
-      Try.to(msg("write_to", path), @tries) do
+      Try.to(msg("write_to #{str.size} bytes", path), @tries) do
         connect do |sftp|
           # assume a 1K/s connection min
 
-          Timeout::timeout([ str.size / 1024, @timeout ].max) do 
+          Timeout::timeout([ str.size / 1024.0, @timeout ].max) do 
             sftp.file.open(File.join(@base, path), "w") do |stream|
-              stream.write str
+              StringIO.open(str) do |string_io|
+                stream.write string_io.read(1024) until string_io.eof?
+              end
             end
           end
         end
