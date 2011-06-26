@@ -129,6 +129,10 @@ module ProxyFS
       transaction.run
     end
 
+    def touch(path)
+      # nothing, yet
+    end
+
     private
 
     def msg(method, path)
