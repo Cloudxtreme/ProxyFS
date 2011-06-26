@@ -38,7 +38,7 @@ Edit the YAML config file. It looks like:
       path: /home/hkf/sync
 </pre>
 
-Run:
+Run as root:
 
 <pre>
   $ ruby main.rb config.yml
