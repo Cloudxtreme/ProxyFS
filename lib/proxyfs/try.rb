@@ -18,13 +18,13 @@ module ProxyFS
 
         begin
           return yield
-        rescue Exception => e
+        rescue Exception
           @@logger.error label
 
           if i >= opts[:times]
             return false
           else
-            wait = opts[:wait][i] rescue 0
+            wait = opts[:wait][i]
 
             @@logger.info "wait for #{wait} seconds"
 
