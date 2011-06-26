@@ -13,7 +13,7 @@ end
 config = YAML.load File.read(ARGV.shift)
 
 config["mirrors"].values.each do |mirror|
-  ProxyFS::Transaction.mirrors.push ProxyFS::Mirror.new(mirror["user"], mirror["host"], mirror["path"])
+  ProxyFS::Transaction.mirrors.push ProxyFS::Mirror.new(mirror["user"], mirror["host"], mirror["path"], config["tries"], config["timeout"])
 end
 
 FuseFS.set_root ProxyFS::ProxyFS.new(config["local_path"])

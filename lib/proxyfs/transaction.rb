@@ -1,4 +1,6 @@
 
+require File.dirname(__FILE__) + "/out_of_sync_exception"
+
 module ProxyFS
   class Transaction
     @@mirrors = []
@@ -23,7 +25,7 @@ module ProxyFS
       @@mirrors.each_with_index do |mirror, index|
         unless @remote.call mirror
           index.times do |i|
-            raise "out of sync" unless @rewind.call @@mirrors[i]
+            raise OutOfSyncException.new unless @rewind.call @@mirrors[i]
           end
 
           return false
@@ -32,7 +34,7 @@ module ProxyFS
 
       unless @local.call
         @@mirrors.each do |mirror|
-          raise "out of sync" unless @rewind.call mirror
+          raise OutOfSyncException.new unless @rewind.call mirror
         end
 
         return false
