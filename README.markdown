@@ -1,5 +1,5 @@
 
-# Proxyfs
+# ProxyFS
 
 Creates a proxy filesystem using fuse for ruby to mount a mirror of a local directory.
 Using the proxy mountpoint, changes to the files will be distributed to remote mirrors automatically and *live*.
@@ -63,11 +63,11 @@ Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
 
 Unfortunately, these tools can IMHO get out of sync easily.
 
-- **Proxyfs**
+- **ProxyFS**
 
 Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory live.
 The write will go to all mirrors or none. Can be used with WAN connections! As the writes are synchronously written, the performance 
-will differ for different connections. Proxyfs assumes to be all mirrors in sync when Proxyfs starts. Therfore, you'll have to
+will differ for different connections. ProxyFS assumes to be all mirrors in sync when ProxyFS starts. Therfore, you'll have to
 initially use rsync one time, for example.
 
 
