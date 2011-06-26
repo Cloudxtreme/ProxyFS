@@ -25,6 +25,12 @@ Edit the YAML config file. It looks like:
   local_path: /home/hkf/sync_local
   mount_point: /home/flakks/mnt
 
+  tries:
+    times: 2
+    wait: [ 1, 5 ]
+
+  timeout: 5
+
   mirrors:
     mirror1:
       host: 127.0.0.1
