@@ -61,7 +61,8 @@ Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
 
 - lsyncd or other inotify based replication/synchronization tools
 
-Unfortunately, these tools can IMHO get out of sync easily.
+Unfortunately, these tools can IMHO get out of sync easily or have to continously run rsync to stay in sync.
+This behaviour is bad if you have to replicate/synchronize thousands of files and hundreds of gigabytes of data.
 
 - **ProxyFS**
 
