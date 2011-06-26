@@ -67,8 +67,8 @@ This behaviour is bad if you have to replicate/synchronize thousands of files an
 - **ProxyFS**
 
 Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory live.
-The write will go to all mirrors or none. Can be used with WAN connections! As the writes are synchronously written, the performance 
-will differ for different connections. ProxyFS assumes to be all mirrors in sync when ProxyFS starts. Therfore, you'll have to
+The write will go to all mirrors and the local copy or *nowhere*. Can be used with WAN connections! As the writes are synchronously written, 
+the performance will differ for different connections. ProxyFS assumes to be all mirrors in sync when ProxyFS starts. Therfore, you'll have to
 initially use rsync one time, for example.
 
 
