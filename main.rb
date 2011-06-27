@@ -1,22 +1,27 @@
 
-require "lib/proxyfs"
-require "lib/proxyfs/mirror"
-require "lib/proxyfs/transaction"
+require File.dirname(__FILE__) + "/lib/proxyfs"
+require File.dirname(__FILE__) + "/lib/worker"
 require "fusefs"
-require "yaml"
 
-if ARGV.empty?
-  puts "usage: [config file]"
+if ARGV.size < 2
+  puts "usage: [local path] [mount point]"
   exit
 end
 
-config = YAML.load File.read(ARGV.shift)
+local_path = ARGV[0]
+mount_point = ARGV[1]
 
-config["mirrors"].values.each do |mirror|
-  ProxyFS::Transaction.mirrors.push ProxyFS::Mirror.new(mirror["user"], mirror["host"], mirror["path"], config["tries"]["times"], config["tries"]["wait"], config["timeout"])
+unless File.directory?(local_path)
+  puts "not a directory: #{local_path}"
+  exit
 end
 
-FuseFS.set_root ProxyFS::ProxyFS.new(config["local_path"])
-FuseFS.mount_under config["mount_point"]
+unless File.directory?(mount_point)
+  puts "not a directory: #{mount_point}"
+  exit
+end
+
+FuseFS.set_root ProxyFS.new(local_path)
+FuseFS.mount_under mount_point
 FuseFS.run
 

@@ -2,7 +2,7 @@
 # ProxyFS
 
 Creates a proxy filesystem using fuse for ruby to mount a mirror of a local directory.
-Using the proxy mountpoint, changes to the files will be distributed to remote mirrors automatically and *live*.
+Using the proxy mountpoint, changes to the files will be distributed to remote mirrors automatically and *live* using the SFTP protocol.
 A transaction mechanism will provide good synchronicity, even if network problems will occur.
 
 ## State (Warning!)
