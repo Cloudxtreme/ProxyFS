@@ -1,6 +1,5 @@
 
-require File.dirname(__FILE__) + "/lib/proxyfs"
-require File.dirname(__FILE__) + "/lib/worker"
+require File.join(File.dirname(__FILE__), "lib/proxyfs")
 require "fusefs"
 
 if ARGV.size < 2

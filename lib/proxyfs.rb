@@ -2,6 +2,8 @@
 require File.join(File.dirname(__FILE__), "task")
 require File.join(File.dirname(__FILE__), "worker")
 require "digest"
+require "fileutils"
+require "rand32"
 
 class ProxyFS
   def initialize(base)
@@ -40,7 +42,7 @@ class ProxyFS
 
   def write_to(path, str)
     Task.transaction do
-      file = Digest::SHA1.hexdigest(str + rand.to_s)
+      file = "#{File.basename path}.#{rand32}"
 
       tasks = @mirrors.collect { |mirror| mirrors.tasks.create! :command => "write_to", :path => path, :file => file }
 
@@ -48,9 +50,15 @@ class ProxyFS
         stream.write str
       end
 
-      open(File.join(@base, path), "w") do |stream| # FIXME for atomicity write to temporary file first and mv afterwards
+      # write local file to temporary file first to provide more atomicity
+
+      temp_file = File.join(@base, File.dirname(path), ".#{File.basename path}.#{rand32}")
+
+      open(temp_file, "w") do |stream|
         stream.write str
       end
+
+      FileUtils.mv(temp_file, path)
 
       Worker.instance.add tasks
     end
@@ -100,11 +108,5 @@ class ProxyFS
 
   def touch(path)
     # nothing, yet
-  end
-
-  private
-
-  def msg(method, path)
-    "local: #{method} #{File.join(@base, path)}"
   end
 end

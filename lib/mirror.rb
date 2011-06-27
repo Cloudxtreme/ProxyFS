@@ -2,6 +2,9 @@
 require "net/sftp"
 require "timeout"
 require "stringio"
+require "rand32"
+
+# Extensions to Net::SFTP to provide additional functionality.
 
 module Net
   module SFTP
@@ -21,13 +24,15 @@ module Net
       end
 
       # Rename a file. If +destination+ already exists, it will be deleted first.
-      # Unfortunately, the operation is not yet atomic FIXME
+      # Unfortunately, the operation is not yet 'atomic' FIXME
 
       def mv!(source, destination)
         remove!(destination) if exists?(destination)
 
         rename!(source, destination)
       end
+
+      # Upload data within +str+ to a file located at +path+.
 
       def upload_data!(path, str)
         file.open(path, "w") do |stream|
@@ -81,9 +86,7 @@ class Mirror < ActiveRecord::Base
       connect do |sftp|
         # assume a 1K/s connection min
 
-        tempfile = File.join(base_path, tempfile_for(path))
-
-        raise "temporary file already exists" if sftp.exists?(tempfile)
+        tempfile = File.join(base_path, File.dirname(path), ".#{File.basename path}.#{rand32}")
 
         sftp.upload_data!(tempfile, str)
 
@@ -109,12 +112,6 @@ class Mirror < ActiveRecord::Base
   end
 
   private
-
-  def tempfile_for(path)
-    chars = ("a" .. "z").to_a + ("A" .. "Z").to_a + ("0" .. "9").to_a
-
-    File.join(File.dirname(path), ".#{File.basename path}.#{6.times.collect{ chars[rand chars.size] }.join}")
-  end
 
   def connect
     Net::SFTP.start(hostname, username) do |sftp|
