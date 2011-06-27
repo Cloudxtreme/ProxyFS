@@ -50,7 +50,7 @@ class Worker
         Dir.foreach(log_path) do |file|
           full_path = File.join(log_path, file)
 
-          File.delete(full_path) if File.file?(full_path) && !files.include?(file)
+          File.delete(full_path) if file !~ /^./ && !files.include?(file)
         end
 
         sleep 300
