@@ -2,7 +2,7 @@
 require "net/sftp"
 require "timeout"
 require "stringio"
-require "rand32"
+require File.join(File.dirname(__FILE__), "rand32")
 
 # Extensions to Net::SFTP to provide additional functionality.
 

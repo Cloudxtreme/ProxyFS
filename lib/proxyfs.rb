@@ -1,9 +1,9 @@
 
 require File.join(File.dirname(__FILE__), "task")
 require File.join(File.dirname(__FILE__), "worker")
+require File.join(File.dirname(__FILE__), "rand32")
 require "digest"
 require "fileutils"
-require "rand32"
 
 class ProxyFS
   def initialize(base)
