@@ -58,10 +58,6 @@ class Mirror < ActiveRecord::Base
         sftp.mkdir! File.join(base_path, path)
       end
     end
-
-    true
-  rescue Exception
-    false
   end
 
   def rmdir(path)
@@ -70,10 +66,6 @@ class Mirror < ActiveRecord::Base
         sftp.rmdir! File.join(base_path, path)
       end
     end
-
-    true
-  rescue Exception
-    false
   end
 
   # write_to generates a temporary file name, writes to the temporary file,
@@ -93,10 +85,6 @@ class Mirror < ActiveRecord::Base
         sftp.mv!(tempfile, File.join(base_path, path))
       end
     end
-
-    true
-  rescue Exception
-    false
   end
 
   def delete(path)
@@ -105,10 +93,6 @@ class Mirror < ActiveRecord::Base
         sftp.remove! File.join(base_path, path)
       end
     end
-
-    true
-  rescue Exception
-    false
   end
 
   private

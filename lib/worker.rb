@@ -80,23 +80,40 @@ class Worker
               task.destroy! # remove task from log
 
               loop do
-                result = case task.command
-                  when "mkdir":
-                    mirror.mkdir task.path
-                  when "rmdir":
-                    mirror.rmdir task.path
-                  when "delete":
-                    mirror.delete task.path
-                  when "write_to":
-                    file = File.join(File.dirname(__FILE__), "../log", task.file)
+                begin
+                  case task.command
+                    when "mkdir":
+                      mirror.mkdir task.path
+                    when "rmdir":
+                      mirror.rmdir task.path
+                    when "delete":
+                      mirror.delete task.path
+                    when "write_to":
+                      file = File.join(File.dirname(__FILE__), "../log", task.file)
 
-                    status = mirror.write_to(task.path, File.read(file))
+                      status = mirror.write_to(task.path, File.read(file))
 
-                    File.delete(file) if status
+                      File.delete(file) if status
 
-                    status
-                  else
-                    raise "should not happen" # FIXME
+                      status
+                    else
+                      raise "should not happen" # FIXME
+                  end
+                # rescue Timeout::Error
+                #   sleep 30
+                # rescue Net::SFTP::StatusException => e
+                #   case e.code
+                #   when Net::SSH::Constants::StatusCodes::FX_NO_CONNECTION
+                #     sleep 30
+                #   when Net::SSH::Constants::StatusCodes::FX_CONNECTION_LOST
+                #     sleep 30
+                #   when SSH_ERROR_CONNECTION_CLOSED ?
+                #   when SSH_ERROR_INVALID_PACKET ?
+                #   when SSH_ERROR_TUNNEL_ERROR ?
+                #   else
+                #     ...
+                # rescue Exception
+                #   ...
                 end
                 
                 if result
