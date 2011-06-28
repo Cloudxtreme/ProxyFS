@@ -10,14 +10,18 @@ ProxyFS manages a log for each mirror, to re-sync a lost mirror when it is avail
 This is an early alpha. Currently it's more like a proof of concept than usable. You better don't use it yet.
 It will possibly delete all your files :-)
 
+Currently, we use mysql for logging. Therefore, you'll have to install a mysql server.
+
 ## Run
 
 Currently only Debian supported (within this README)
 
 <pre>
-  $ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby libactiverecord-ruby1.8
+  $ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby libactiverecord-ruby1.8 mysql-server libmysql-ruby
   $ modprobe fuse
 </pre>
+
+Edit config/database.rb for mysql settings (logging).
 
 Edit mirrors.rb to add mirrors and run:
 

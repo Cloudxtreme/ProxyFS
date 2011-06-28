@@ -41,26 +41,36 @@ class ProxyFS
   end
 
   def write_to(path, str)
-    Task.transaction do
-      file = "#{File.basename path}.#{rand32}"
+    # don't let the garbage collector run, while write_to is running.
+    # we write to a temporary file (i.e. produce garbage), but the task is added later, because we use a transaction.
+    # therefore, the garbage collector would think that the newly created temporary file is garbage and would delete it as soon as it runs.
 
-      tasks = @mirrors.collect { |mirror| mirrors.tasks.create! :command => "write_to", :path => path, :file => file }
+    Worker.garbage.synchronize do
+      Task.transaction do
+        file = "#{File.basename path}.#{rand32}"
 
-      open(File.join(File.dirname(__FILE__), "../log", file) do |stream|
-        stream.write str
+        tasks = @mirrors.collect { |mirror| mirrors.tasks.create! :command => "write_to", :path => path, :file => file }
+
+        begin
+          open(File.join(File.dirname(__FILE__), "../log", file) do |stream|
+            stream.write str
+          end
+
+          # write local file to temporary file first to provide more atomicity
+
+          temp_file = File.join(@base, File.dirname(path), ".#{File.basename path}.#{rand32}")
+
+          open(temp_file, "w") do |stream|
+            stream.write str
+          end
+
+          FileUtils.mv(temp_file, path)
+
+          Worker.instance.add tasks
+        rescue Exception
+          raise ActiveRecord::Rollback
+        end
       end
-
-      # write local file to temporary file first to provide more atomicity
-
-      temp_file = File.join(@base, File.dirname(path), ".#{File.basename path}.#{rand32}")
-
-      open(temp_file, "w") do |stream|
-        stream.write str
-      end
-
-      FileUtils.mv(temp_file, path)
-
-      Worker.instance.add tasks
     end
   end
 
@@ -72,9 +82,14 @@ class ProxyFS
     Task.transaction do
       tasks = @mirrors.collect { |mirror| mirror.tasks.create! :command => "delete", :path => path }
 
-      File.delete File.join(@base, path)
+      begin
+        File.delete File.join(@base, path)
 
-      Worker.instance.add tasks
+        Worker.instance.add tasks
+      rescue Exception
+        raise ActiveRecord::Rollback
+      end
+
     end
   end
 
@@ -86,9 +101,13 @@ class ProxyFS
     Task.transaction do
       tasks = @mirrors.collect { |mirror| mirror.tasks.create! :command => "mkdir", :path => path }
 
-      Dir.mkdir File.join(@base, path)
+      begin
+        Dir.mkdir File.join(@base, path)
 
-      Worker.instance.add tasks
+        Worker.instance.add tasks
+      rescue Exception
+        raise ActiveRecord::Rollback
+      end
     end
   end
 
@@ -100,9 +119,13 @@ class ProxyFS
     Task.transaction do
       tasks = @mirrors.collect{ |mirror| mirror.tasks.create! :command => "rmdir", :path => path }
 
-      Dir.rmdir File.join(@base, path)
+      begin
+        Dir.rmdir File.join(@base, path)
 
-      Worker.instance.add tasks
+        Worker.instance.add tasks
+      rescue Exception
+        raise ActiveRecord::Rollback
+      end
     end
   end
 

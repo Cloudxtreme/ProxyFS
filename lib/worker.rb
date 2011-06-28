@@ -1,6 +1,7 @@
 
 require "singleton"
 require "queue"
+require "thread"
 
 require File.join(File.dirname(__FILE__), "mirror")
 
@@ -10,10 +11,14 @@ require File.join(File.dirname(__FILE__), "mirror")
 class Worker
   include Singleton
 
+  attr_accessor :garbage
+
   def initialize
     @mirrors = Mirror.all
 
     @queues = @mirrors.collect { Queue.new }
+
+    @garbage = Mutex.new
 
     @mirrors.each_with_index do |mirror, i|
       mirror.tasks.each do |task|
@@ -45,15 +50,17 @@ class Worker
       log_path = File.join(File.dirname(__FILE__), "../log")
 
       loop do
-        files = Task.all.collect(&:file).to_set
+        @garbage.synchronize do
+          files = Task.all.collect(&:file).to_set
 
-        Dir.foreach(log_path) do |file|
-          full_path = File.join(log_path, file)
+          Dir.foreach(log_path) do |file|
+            full_path = File.join(log_path, file)
 
-          File.delete(full_path) if file !~ /^./ && !files.include?(file)
+            File.delete(full_path) if file !~ /^./ && !files.include?(file)
+          end
+
+          sleep 300
         end
-
-        sleep 300
       end
     end
 
