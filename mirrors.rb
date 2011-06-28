@@ -10,5 +10,5 @@ CreateTasks.up
 # You can add arbitrary mirrors, available by SFTP:
 # Mirror.create :hostname => "...", :username => "...", :path => "/path/to/destination"
 
-Mirror.create :hostname => "127.0.0.1", :username => "hkf", :base_path => "/home/hkf/sync"
+Mirror.create! :hostname => "127.0.0.1", :username => "hkf", :base_path => "/home/hkf/sync"
 

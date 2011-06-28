@@ -46,7 +46,7 @@ module Net
 end
 
 class Mirror < ActiveRecord::Base
-  validates_presence_of :hostname, :username, :path
+  validates_presence_of :hostname, :username, :base_path
 
   has_many :tasks, :order => :id
 

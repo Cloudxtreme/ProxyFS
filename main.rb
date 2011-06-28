@@ -1,5 +1,6 @@
 
 require File.join(File.dirname(__FILE__), "lib/proxyfs")
+require File.join(File.dirname(__FILE__), "lib/worker")
 require "fusefs"
 
 if ARGV.size < 2
@@ -22,5 +23,8 @@ end
 
 FuseFS.set_root ProxyFS.new(local_path)
 FuseFS.mount_under mount_point
+
+Worker.instance.work!
+
 FuseFS.run
 
