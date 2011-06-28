@@ -46,8 +46,6 @@ class Worker
     # garbage collector
 
     Thread.new do
-      LOGGER.info "garbage collector starting"
-
       log_path = File.join(File.dirname(__FILE__), "../log")
 
       loop do
@@ -71,8 +69,6 @@ class Worker
 
     @mirrors.each_with_index do |mirror, i|
       Thread.new do
-        LOGGER.info "replicator starting for #{mirror.hostname}"
-
         queue = @queues[i]
 
         loop do
@@ -94,7 +90,7 @@ class Worker
 
                       mirror.rmdir task.path
                     when "delete"
-                    LOGGER.info "#{mirror.hostname}: delete #{task.path}"
+                      LOGGER.info "#{mirror.hostname}: delete #{task.path}"
 
                       mirror.delete task.path
                     when "write_to"
@@ -105,46 +101,13 @@ class Worker
                       mirror.write_to(task.path, File.read(file))
 
                       File.delete file
-                    else
-                      LOGGER.error "fatal error" # FIXME
                   end
 
                   break
-                rescue Timeout::Error
-                  LOGGER.error "#{mirror.hostname}: timeout"
-
-                  sleep 30
-                rescue Net::SFTP::StatusException => e
-                  case e.code
-                    when Net::SSH::Constants::StatusCodes::FX_NO_CONNECTION
-                      LOGGER.error "#{mirror.hostname}: no connection"
-
-                      sleep 30
-                    when Net::SSH::Constants::StatusCodes::FX_CONNECTION_LOST
-                      LOGGER.error "#{mirror.hostname}: connection lost"
-
-                      sleep 30
-                    else
-                      LOGGER.error "fatal error" # FIXME
-                  end
-                rescue Errno::ECONNREFUSED
-                  LOGGER.error "#{mirror.hostname}: connection refused"
-
-                  sleep 30
-                rescue Errno::ECONNRESET
-                  LOGGER.error "#{mirror.hostname}: connection reset"
-
-                  sleep 30
-                rescue Errno::ENOTCONN
-                  LOGGER.error "#{mirror.hostname}: not connected"
-
-                  sleep 30
-                rescue Errno::ECONNABORTED
-                  LOGGER.error "#{mirror.hostname}: connection aborted"
-
-                  sleep 30
                 rescue Exception => e
-                  LOGGER.error "fatal error" # FIXME
+                  LOGGER.error "#{mirror.hostname}: #{e}"
+
+                  handle_exception e
                 end
               end
             end
@@ -152,6 +115,37 @@ class Worker
         end
       end
     end
+  end
+
+  def handle_exception(e)
+    raise e
+  rescue Timeout::Error
+    sleep 30
+  rescue Net::SFTP::StatusException => e
+    case e.code
+      when Net::SSH::Constants::StatusCodes::FX_NO_CONNECTION
+        sleep 30
+      when Net::SSH::Constants::StatusCodes::FX_CONNECTION_LOST
+        sleep 30
+      else
+        sleep 10800 # 3 hours
+    end
+  rescue Errno::ECONNREFUSED
+    sleep 30
+  rescue Errno::ECONNRESET
+    sleep 30
+  rescue Errno::ENOTCONN
+    sleep 30
+  rescue Errno::ECONNABORTED
+    sleep 30
+  rescue Errno::EHOSTDOWN
+    sleep 30
+  rescue Errno::EHOSTUNREACH
+    sleep 30
+  rescue Errno::ENETDOWN
+    sleep 30
+  rescue Exception
+    sleep 10800 # 3 hours
   end
 end
 

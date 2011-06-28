@@ -107,8 +107,6 @@ class ProxyFS
 
       begin
         File.delete File.join(@base, path)
-
-        Worker.instance.add tasks
       rescue Exception
         raise ActiveRecord::Rollback
       end
