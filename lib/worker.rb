@@ -66,42 +66,46 @@ class Worker
 
     # start thread for each mirror
 
+    mutex = Mutex.new
+
     @mirrors.each_with_index do |mirror, i|
       Thread.new do
         queue = @queues[i]
 
         loop do
-          task = queue.pop
+          mutex.synchronize do # only one thread at a time uploading
+            task = queue.pop
 
-          Task.transaction do
-            task.destroy! # remove task from log
+            Task.transaction do
+              task.destroy! # remove task from log
 
-            loop do
-              result = case task.command
-                when "mkdir":
-                  mirror.mkdir task.path
-                when "rmdir":
-                  mirror.rmdir task.path
-                when "delete":
-                  mirror.delete task.path
-                when "write_to":
-                  file = File.join(File.dirname(__FILE__), "../log", task.file)
+              loop do
+                result = case task.command
+                  when "mkdir":
+                    mirror.mkdir task.path
+                  when "rmdir":
+                    mirror.rmdir task.path
+                  when "delete":
+                    mirror.delete task.path
+                  when "write_to":
+                    file = File.join(File.dirname(__FILE__), "../log", task.file)
 
-                  status = mirror.write_to(task.path, File.read(file))
+                    status = mirror.write_to(task.path, File.read(file))
 
-                  File.delete(file) if status
+                    File.delete(file) if status
 
-                  status
+                    status
+                  else
+                    raise "should not happen" # FIXME
+                end
+                
+                if result
+                  break
                 else
-                  raise "should not happen" # FIXME
-              end
-              
-              if result
-                break
-              else
-                # error occurred, sleep some time, then try again
+                  # error occurred, sleep some time, then try again
 
-                sleep 30
+                  sleep 30
+                end
               end
             end
           end

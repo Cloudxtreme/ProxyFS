@@ -10,7 +10,10 @@ ProxyFS manages a log for each mirror, to re-sync a lost mirror when it is avail
 This is an early alpha. Currently it's more like a proof of concept than usable. You better don't use it yet.
 It will possibly delete all your files :-)
 
-Currently, we use mysql for logging. Therefore, you'll have to install a mysql server.
+Currently, mysql is used for logging. Therefore, you'll have to install a mysql server.
+
+Please note, that you need space within the log directory, 
+because each file is temporary written to the log directory and stored until it is replicated to each mirror.
 
 ## Run
 
