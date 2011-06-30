@@ -1,6 +1,41 @@
 
-require "log4r"
+require "thread"
 
-LOGGER = Log4r::Logger.new "proxyfs"
-LOGGER.outputters = Log4r::FileOutputter.new("proxyfs", :filename => File.join(File.dirname(__FILE__), "../status.log"))
+module ProxyFS
+  class Logger
+    def initialize(config)
+      @file = open(config[:path], "w+")
+
+      @mutex = Mutex.new
+    end
+
+    def info(str)
+      log("info", str)
+    end
+
+    def error(str)
+      log("error", str)
+    end
+
+    def fatal(str)
+      log("fatal", str)
+    end
+
+    private
+
+    def log(mode, str)
+      @mutex.synchronize do
+        begin
+          @file.puts "#{mode}: #{str}"
+
+          puts "#{mode}: #{str}"
+        rescue Exception
+          false
+        end
+      end
+
+      true
+    end
+  end
+end
 

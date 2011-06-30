@@ -7,6 +7,7 @@ class CreateTasks < ActiveRecord::Migration
       t.string :command
       t.string :path
       t.string :file
+      t.boolean :block
       t.references :mirror
 
       t.timestamps

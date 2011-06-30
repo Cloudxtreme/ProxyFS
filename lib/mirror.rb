@@ -2,15 +2,12 @@
 require "net/sftp"
 require "timeout"
 require "stringio"
-require File.join(File.dirname(__FILE__), "rand32")
-
-# Extensions to Net::SFTP to provide additional functionality.
+require File.expand_path File.join(File.dirname(__FILE__), "../config/database")
+require File.expand_path File.join(File.dirname(__FILE__), "rand32")
 
 module Net
   module SFTP
     class Session
-      # Check whether or not the file exists at +path+.
-
       def exists?(path)
         begin
           stat! path
@@ -23,16 +20,11 @@ module Net
         false
       end
 
-      # Rename a file. If +destination+ already exists, it will be deleted first.
-      # Unfortunately, the operation is not yet 'atomic' FIXME
-
       def mv!(source, destination)
         remove!(destination) if exists?(destination)
 
         rename!(source, destination)
       end
-
-      # Upload data within +str+ to a file located at +path+.
 
       def upload_data!(path, str)
         file.open(path, "w") do |stream|
@@ -45,61 +37,56 @@ module Net
   end
 end
 
-class Mirror < ActiveRecord::Base
-  validates_presence_of :hostname, :username, :base_path
+module ProxyFS
+  class Mirror < ActiveRecord::Base
+    validates_presence_of :hostname, :username, :base_path
 
-  has_many :tasks, :order => :id
+    has_many :tasks, :order => :id
 
-  @@timeout = 5
+    @@timeout = 5
 
-  def mkdir(path)
-    Timeout::timeout(@@timeout) do
-      connect do |sftp|
-        sftp.mkdir! File.join(base_path, path)
+    def mkdir(path)
+      Timeout::timeout(@@timeout) do
+        connect do |sftp|
+          sftp.mkdir! File.join(base_path, path)
+        end
       end
     end
-  end
 
-  def rmdir(path)
-    Timeout::timeout(@@timeout) do
-      connect do |sftp|
-        sftp.rmdir! File.join(base_path, path)
+    def rmdir(path)
+      Timeout::timeout(@@timeout) do
+        connect do |sftp|
+          sftp.rmdir! File.join(base_path, path)
+        end
       end
     end
-  end
 
-  # write_to generates a temporary file name, writes to the temporary file,
-  # then moves the temporary file to its final destination.
-  # Therefore, the possibilities of errors should be minimal, because
-  # a possibly existing file is not accessed until the temporary file is moved.
+    def write_to(path, str)
+      Timeout::timeout([ str.size / 1024.0, @@timeout ].max) do 
+        connect do |sftp|
+          # assume a 1K/s connection min
 
-  def write_to(path, str)
-    Timeout::timeout([ str.size / 1024.0, @@timeout ].max) do 
-      connect do |sftp|
-        # assume a 1K/s connection min
+          tempfile = File.join(base_path, File.dirname(path), ".#{File.basename path}.#{ProxyFS.rand32}")
 
-        tempfile = File.join(base_path, File.dirname(path), ".#{File.basename path}.#{rand32}")
+          sftp.upload_data!(tempfile, str)
 
-        sftp.upload_data!(tempfile, str)
-
-        sftp.mv!(tempfile, File.join(base_path, path))
+          sftp.mv!(tempfile, File.join(base_path, path))
+        end
       end
     end
-  end
 
-  def delete(path)
-    Timeout::timeout(@@timeout) do
-      connect do |sftp|
-        sftp.remove! File.join(base_path, path)
+    def delete(path)
+      Timeout::timeout(@@timeout) do
+        connect do |sftp|
+          sftp.remove! File.join(base_path, path)
+        end
       end
     end
-  end
 
-  private
+    private
 
-  def connect
-    Net::SFTP.start(hostname, username) do |sftp|
-      yield sftp
+    def connect
+      Net::SFTP.start(hostname, username) { |sftp| yield sftp }
     end
   end
 end

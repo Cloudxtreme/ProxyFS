@@ -20,13 +20,13 @@ because each file is temporary written to the log directory and stored until it 
 Currently only Debian supported (within this README)
 
 <pre>
-  $ apt-get install fuse ruby libfusefs-ruby liblog4r-ruby libnet-sftp2-ruby libactiverecord-ruby1.8 mysql-server libmysql-ruby
+  $ apt-get install fuse ruby irb libfusefs-ruby libnet-sftp2-ruby libactiverecord-ruby1.8 mysql-server libmysql-ruby
   $ modprobe fuse
 </pre>
 
 Edit config/database.rb for mysql settings (logging).
 
-Edit mirrors.rb to add mirrors and run:
+Edit mirrors.rb to add mirrors and run as root:
 
 <pre>
   $ ruby mirrors.rb
@@ -35,8 +35,17 @@ Edit mirrors.rb to add mirrors and run:
 Then, to mount ProxyFS, run as root:
 
 <pre>
-  $ ruby main.rb [local path] [mount point]
+  $ ruby proxyfs.rb [local path] [mount point]
 </pre>
+
+To start the ProxyFS console, run as root:
+
+<pre>
+  $ irb -r console.rb
+</pre>
+
+Within the console, enter 'show_help' and press enter.
+To exit from the console, enter 'quit'.
 
 ## Use Cases
 
