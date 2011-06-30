@@ -1,6 +1,8 @@
 
 require "action_mailer"
 
+ActionMailer::Base.template_root = File.dirname __FILE__
+
 class ActionMailer::Base
   def from
     "ProxyFS@no-reply.com"
@@ -10,8 +12,6 @@ class ActionMailer::Base
     "vetter@flakks.com"
   end
 end
-
-ActionMailer::Base.template_root = File.dirname(__FILE__)
 
 ActionMailer::Base.sendmail_settings = { 
   :location => "/usr/sbin/sendmail",

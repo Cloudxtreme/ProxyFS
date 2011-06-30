@@ -17,19 +17,19 @@ module ProxyFS
     end
 
     def delete(path, &block)
-      replicate({ :command => "delete", :path => path }, block)
+      replicate(block, :command => "delete", :path => path)
     end
 
     def mkdir(path, &block)
-      replicate({ :command => "mkdir", :path => path }, block)
+      replicate(block, :command => "mkdir", :path => path)
     end
 
     def rmdir(path, &block)
-      replicate({ :command => "rmdir", :path => path }, block)
+      replicate(block, :command => "rmdir", :path => path)
     end
 
     def write_to(path, file, &block)
-      replicate({ :command => "write_to", :path => path, :file => file }, block)
+      replicate(block, :command => "write_to", :path => path, :file => file)
     end
 
     def replicate!
@@ -40,7 +40,7 @@ module ProxyFS
 
     private
 
-    def replicate(attributes, block)
+    def replicate(block, attributes)
       tasks = GarbageCollector.instance.synchronize do
         Task.transaction do
           result = @mirrors.collect { |mirror| mirror.tasks.create! attributes }
