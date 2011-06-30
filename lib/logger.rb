@@ -1,10 +1,21 @@
 
+require "action_mailer"
+require "config/mailer"
+require "timeout"
 require "thread"
 
 module ProxyFS
+  class Mailer < ActionMailer::Base
+    def notification(mode, str)
+      subject "ProxyFS: #{mode}"
+
+      part :body => str
+    end
+  end
+
   class Logger
-    def initialize(config)
-      @file = open(config[:path], "w+")
+    def initialize(file)
+      @file = open(file, "w+")
 
       @mutex = Mutex.new
     end
@@ -14,14 +25,24 @@ module ProxyFS
     end
 
     def error(str)
-      log("error", str)
+      notify("error", str)
     end
 
     def fatal(str)
-      log("fatal", str)
+      notify("fatal", str)
     end
 
     private
+
+    def notify(mode, str)
+      Timeout::timeout(3) do
+        Mailer.deliver_notification(mode, str)
+      end
+
+      log(mode, str)
+    rescue Exception
+      false
+    end
 
     def log(mode, str)
       @mutex.synchronize do
