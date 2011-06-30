@@ -2,8 +2,8 @@
 require "net/sftp"
 require "timeout"
 require "stringio"
-require File.expand_path File.join(File.dirname(__FILE__), "../config/database")
-require File.expand_path File.join(File.dirname(__FILE__), "rand32")
+require "config/database"
+require "lib/rand32"
 
 module Net
   module SFTP

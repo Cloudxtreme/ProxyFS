@@ -1,6 +1,8 @@
 
-require File.join(File.dirname(__FILE__), "lib/mirror")
-require File.join(File.dirname(__FILE__), "lib/task")
+$LOAD_PATH.unshift File.dirname(__FILE__)
+
+require "lib/mirror"
+require "lib/task"
 
 include ProxyFS
 

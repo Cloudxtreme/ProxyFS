@@ -1,7 +1,7 @@
 
 require "thread"
 require "singleton"
-require File.expand_path File.join(File.dirname(__FILE__), "task")
+require "lib/task"
 
 module ProxyFS
   class GarbageCollector

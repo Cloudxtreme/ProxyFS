@@ -1,8 +1,10 @@
 
+$LOAD_PATH.unshift File.dirname(__FILE__)
+
 require "fusefs"
-require File.expand_path File.join(File.dirname(__FILE__), "lib/garbage_collector")
-require File.expand_path File.join(File.dirname(__FILE__), "lib/proxy_fuse")
-require File.expand_path File.join(File.dirname(__FILE__), "lib/mirrors")
+require "lib/garbage_collector"
+require "lib/proxy_fuse"
+require "lib/mirrors"
 
 if ARGV.size < 2
   puts "usage: [local path] [mount point]"

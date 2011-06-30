@@ -1,9 +1,8 @@
 
 require "digest"
 require "fileutils"
-require File.expand_path File.join(File.dirname(__FILE__), "../config/logger")
-require File.expand_path File.join(File.dirname(__FILE__), "mirrors")
-require File.expand_path File.join(File.dirname(__FILE__), "rand32")
+require "lib/mirrors"
+require "lib/rand32"
 
 module ProxyFS
   class ProxyFuse

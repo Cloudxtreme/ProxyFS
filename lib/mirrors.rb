@@ -1,10 +1,10 @@
 
 require "singleton"
-require File.expand_path File.join(File.dirname(__FILE__), "../config/logger")
-require File.expand_path File.join(File.dirname(__FILE__), "garbage_collector")
-require File.expand_path File.join(File.dirname(__FILE__), "mirror_worker")
-require File.expand_path File.join(File.dirname(__FILE__), "mirror")
-require File.expand_path File.join(File.dirname(__FILE__), "task")
+require "config/logger"
+require "lib/garbage_collector"
+require "lib/mirror_worker"
+require "lib/mirror"
+require "lib/task"
 
 module ProxyFS
   class Mirrors

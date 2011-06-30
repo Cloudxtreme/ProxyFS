@@ -1,6 +1,6 @@
 
 require "net/sftp"
-require File.expand_path File.join(File.dirname(__FILE__), "../config/logger")
+require "config/logger"
 
 module ProxyFS
   class ErrorHandler

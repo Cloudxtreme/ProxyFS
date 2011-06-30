@@ -1,8 +1,10 @@
 
-require File.join(File.dirname(__FILE__), "config/database")
-require File.join(File.dirname(__FILE__), "lib/mirror")
-require File.join(File.dirname(__FILE__), "db/migrations/create_mirrors")
-require File.join(File.dirname(__FILE__), "db/migrations/create_tasks")
+$LOAD_PATH.unshift File.dirname(__FILE__)
+
+require "config/database"
+require "lib/mirror"
+require "db/migrations/create_mirrors"
+require "db/migrations/create_tasks"
 
 CreateMirrors.up
 CreateTasks.up

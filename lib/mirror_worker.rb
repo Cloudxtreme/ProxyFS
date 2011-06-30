@@ -2,10 +2,7 @@
 require "singleton"
 require "net/sftp"
 require "thread"
-require File.expand_path File.join(File.dirname(__FILE__), "../config/logger")
-require File.expand_path File.join(File.dirname(__FILE__), "error_handler")
-require File.expand_path File.join(File.dirname(__FILE__), "mirror")
-require File.expand_path File.join(File.dirname(__FILE__), "task")
+require "lib/error_handler"
 
 module ProxyFS
   class MirrorWorker
