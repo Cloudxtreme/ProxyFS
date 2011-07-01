@@ -3,7 +3,7 @@ $LOAD_PATH.unshift File.dirname(__FILE__)
 
 require "fusefs"
 require "lib/garbage_collector"
-require "lib/proxy_fuse"
+require "lib/fuse"
 require "lib/mirrors"
 
 if ARGV.size < 2
@@ -24,7 +24,7 @@ unless File.directory?(mount_point)
   exit
 end
 
-FuseFS.set_root ProxyFS::ProxyFuse.new(local_path)
+FuseFS.set_root ProxyFS::Fuse.new(local_path)
 FuseFS.mount_under(mount_point, "allow_other")
 
 ProxyFS::Mirrors.instance.replicate!

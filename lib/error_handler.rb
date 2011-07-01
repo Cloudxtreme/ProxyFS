@@ -1,9 +1,12 @@
 
 require "net/sftp"
 require "config/logger"
+require "timeout"
 
 module ProxyFS
   class ErrorHandler
+    @@timeout = 30
+
     def initialize(mirror, task)
       @mirror = mirror
       @task = task
@@ -38,7 +41,7 @@ module ProxyFS
       end
 
       loop do
-        sleep 30
+        sleep @@timeout
 
         @task.reload
 

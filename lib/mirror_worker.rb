@@ -25,10 +25,10 @@ module ProxyFS
     def work!
       Thread.new do
         loop do
-          @@mutex.synchronize do
-            task = @queue.pop
+          task = @queue.pop
 
-            begin
+          begin
+            @@mutex.synchronize do
               case task.command
                 when "mkdir"
                   @mirror.mkdir task.path
@@ -43,13 +43,13 @@ module ProxyFS
 
                   File.delete file
               end
-
-              task.done!
-            rescue Exception => e
-              ErrorHandler.new(@mirror, task).handle e
-
-              retry
             end
+
+            task.done
+          rescue Exception => e
+            ErrorHandler.new(@mirror, task).handle e
+
+            retry
           end
         end
       end

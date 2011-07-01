@@ -57,6 +57,30 @@ def show_tasks(hostname = nil)
   nil
 end
 
+def set_paused
+  # TODO
+end
+
+def set_unpaused
+  # TODO
+end
+
+def skip_one(hostname)
+  # TODO
+end
+
+def skip_all(hostname)
+  # TODO
+end
+
+def add_mirror(hostname, username, path)
+  # TODO
+end
+
+def remove_mirror(hostname)
+  # TODO
+end
+
 def show_help
   puts "supported commands:"
   puts "* show_help - shows this screen"

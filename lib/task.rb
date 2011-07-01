@@ -1,14 +1,14 @@
 
-require File.expand_path File.join(File.dirname(__FILE__), "../config/database")
-require File.expand_path File.join(File.dirname(__FILE__), "../config/logger")
+require "config/database"
+require "config/logger"
 
 module ProxyFS
   class Task < ActiveRecord::Base
-    validates_presence_of :command, :path
+    validates_presence_of :command, :path, :mirror
 
     belongs_to :mirror
 
-    def done!
+    def done
       destroy
 
       LOGGER.info "#{mirror.hostname}: #{command} #{path}: done"

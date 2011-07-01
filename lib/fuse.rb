@@ -5,7 +5,7 @@ require "lib/mirrors"
 require "lib/rand32"
 
 module ProxyFS
-  class ProxyFuse
+  class Fuse
     def initialize(base)
       @base = base
 
@@ -28,8 +28,8 @@ module ProxyFS
       File.read File.join(@base, path)
     end
 
-    def executeable?(path)
-      File.executeable? File.join(@base, path)
+    def executable?(path)
+      File.executable? File.join(@base, path)
     end
 
     def size(path)
@@ -48,7 +48,7 @@ module ProxyFS
           stream.write str
         end
 
-        # write local file to temporary file first to provide more atomicity
+        # write to temporary file first to provide more atomicity
 
         temp_file = File.join(@base, File.dirname(path), ".#{File.basename path}.#{ProxyFS.rand32}")
 

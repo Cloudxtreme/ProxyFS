@@ -41,6 +41,8 @@ module ProxyFS
   class Mirror < ActiveRecord::Base
     validates_presence_of :hostname, :username, :base_path
 
+    validates_uniqueness_of :hostname
+
     has_many :tasks, :order => :id
 
     @@timeout = 5
@@ -86,7 +88,9 @@ module ProxyFS
     private
 
     def connect
-      Net::SFTP.start(hostname, username) { |sftp| yield sftp }
+      Net::SFTP.start(hostname, username) do |sftp| 
+        yield sftp
+      end
     end
   end
 end

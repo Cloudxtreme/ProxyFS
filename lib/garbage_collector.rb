@@ -7,6 +7,8 @@ module ProxyFS
   class GarbageCollector
     include Singleton
 
+    @@timeout = 300
+
     def initialize
       @mutex = Mutex.new
     end
@@ -23,16 +25,18 @@ module ProxyFS
 
         loop do
           synchronize do
+            dir = Dir.entries log_path
+
             files = Task.all.collect(&:file).to_set
 
-            Dir.foreach(log_path) do |file|
+            dir.each do |file|
               full_path = File.join(log_path, file)
 
-              File.delete(full_path) if file !~ /^./ && !files.include?(file)
+              File.delete(full_path) if file !~ /^\./ && !files.include?(file)
             end
           end
 
-          sleep 300
+          sleep @@timeout
         end
       end
     end

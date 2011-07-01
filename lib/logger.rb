@@ -15,9 +15,15 @@ module ProxyFS
 
   class Logger
     def initialize(file)
-      @file = open(file, "w+")
+      @file = file
+
+      @stream = open(@file, "a")
 
       @mutex = Mutex.new
+    end
+
+    def size
+      File.read(@file).lines.count
     end
 
     def info(str)
@@ -47,9 +53,8 @@ module ProxyFS
     def log(mode, str)
       @mutex.synchronize do
         begin
-          @file.puts "#{mode}: #{str}"
-
-          puts "#{mode}: #{str}"
+          @stream.puts "#{mode}: #{str}"
+          @stream.flush
         rescue Exception
           false
         end

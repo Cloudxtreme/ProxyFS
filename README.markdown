@@ -10,7 +10,7 @@ ProxyFS manages a log for each mirror, to re-sync a lost mirror when it is avail
 This is an early alpha. Currently it's more like a proof of concept than usable. You better don't use it yet.
 It will possibly delete all your files :-)
 
-Currently, mysql is used for logging. Therefore, you'll have to install a mysql server.
+Currently, we use mysql for logging. Therefore, you'll have to install a mysql server or other database supported by active record and having transactions.
 
 Please note, that you need space within the log directory, 
 because each file is temporary written to the log directory and stored until it is replicated to each mirror.
@@ -26,10 +26,10 @@ Currently only Debian supported (within this README)
 
 * Edit config/database.rb for mysql settings (logging).
 * Edit config/mailer.rb for email notifications.
-* Edit mirrors.rb to add mirrors and run as root:
+* To setup the database tables, run from the ProxyFS root directory as root (the database must already exist):
 
 <pre>
-  $ ruby mirrors.rb
+  $ ruby database.rb
 </pre>
 
 Then, to mount ProxyFS, run as root:
@@ -45,6 +45,7 @@ To start the ProxyFS console, run as root:
 </pre>
 
 Within the console, enter 'show_help' and press enter.
+From the console, you can add mirrors.
 To exit from the console, enter 'quit'.
 
 ## Use Cases
