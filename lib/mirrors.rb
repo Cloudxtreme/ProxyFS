@@ -41,7 +41,7 @@ module ProxyFS
       end
     end
 
-    def stop
+    def stop!
       # starts a new thread to prevent from ThreadErrors thrown by the mutex
 
       Thread.new do

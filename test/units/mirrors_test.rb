@@ -81,14 +81,8 @@ class MirrorsTest < ProxyFS::TestCase
     end
   end
 
-  def test_stop
-    # stop should be running in a separate thread, but that's hard to test
-
-    assert(
-      @mirrors.stop do 
-        # stopped
-      end
-    )
+  def test_stop!
+    @mirrors.stop! { assert true }
   end
 end
 

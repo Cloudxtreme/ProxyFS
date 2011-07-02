@@ -29,9 +29,7 @@ end
 open(File.join(File.dirname(__FILE__), "tmp/proxyfs.pid"), "w") { |stream| stream.write Process.pid.to_s }
 
 trap("SIGTERM") do
-  ProxyFS.exit
-
-  system Escape.shell_command([ "/bin/umount", mount_point ]).to_s
+  ProxyFS.exit!
 end
 
 FuseFS.set_root ProxyFS::Fuse.new(local_path)

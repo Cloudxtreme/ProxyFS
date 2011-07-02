@@ -18,7 +18,7 @@ class GarbageCollectorTest < ProxyFS::TestCase
   end
 
   def teardown
-    ProxyFS::GarbageCollector.instance.stop
+    ProxyFS::GarbageCollector.instance.stop!
   end
 
   def test_collect!
@@ -45,8 +45,8 @@ class GarbageCollectorTest < ProxyFS::TestCase
     File.delete path
   end
 
-  def test_stop
-    assert ProxyFS::GarbageCollector.instance.stop
+  def test_stop!
+    assert ProxyFS::GarbageCollector.instance.stop!
   end
 end
 

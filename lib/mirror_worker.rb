@@ -24,7 +24,7 @@ module ProxyFS
 
     # All workers share the same mutex. Therefore we can shutdown all at once
 
-    def self.stop_all
+    def self.stop_all!
       @@mutex.synchronize do
         @thread.exit if @thread
 

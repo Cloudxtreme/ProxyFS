@@ -19,8 +19,8 @@ module ProxyFS
       end
     end
 
-    def stop
-      @mutex.synchronize do
+    def stop!
+      synchronize do
         @thread.exit if @thread
 
         yield if block_given?

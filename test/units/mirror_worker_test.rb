@@ -62,7 +62,7 @@ class MirrorWorkerTest < ProxyFS::TestCase
   end
 
   def teardown
-    ProxyFS::MirrorWorker.stop_all
+    ProxyFS::MirrorWorker.stop_all!
   end
 
   def test_push
@@ -119,8 +119,8 @@ class MirrorWorkerTest < ProxyFS::TestCase
     end
   end
 
-  def test_stop
-    assert ProxyFS::MirrorWorker.stop_all
+  def test_stop!
+    assert ProxyFS::MirrorWorker.stop_all!
   end
 end
 
