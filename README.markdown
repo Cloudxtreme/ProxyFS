@@ -48,6 +48,13 @@ Within the console, enter 'show_help' and press enter.
 From the console, you can add mirrors.
 To exit from the console, enter 'quit'.
 
+If you want to kill ProxyFS, please use the console as well to let ProxyFS exit gracefully.
+
+<pre>
+  $ irb -r console.rb
+  > kill_now
+</pre>
+
 ## Use Cases
 
 Say you have multiple webservers and directories with a large collection of rather static files.

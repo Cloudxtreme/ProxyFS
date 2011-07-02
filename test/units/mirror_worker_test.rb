@@ -61,6 +61,10 @@ class MirrorWorkerTest < ProxyFS::TestCase
     @worker.work!
   end
 
+  def teardown
+    ProxyFS::MirrorWorker.stop_all
+  end
+
   def test_push
     @worker = ProxyFS::MirrorWorker.new fixture(:mirror)
 
@@ -95,7 +99,7 @@ class MirrorWorkerTest < ProxyFS::TestCase
 
   def test_write_to
     assert_difference("@mirror.commands", [[ "write_to", "/test.txt", "test" ]]) do
-      open(File.join(File.dirname(__FILE__), "../../log/test.bin"), "w") do |stream|
+      open(File.join(File.dirname(__FILE__), "../../tmp/log/test.bin"), "w") do |stream|
         stream.write "test"
       end
 
@@ -113,6 +117,10 @@ class MirrorWorkerTest < ProxyFS::TestCase
 
       sleep 1
     end
+  end
+
+  def test_stop
+    assert ProxyFS::MirrorWorker.stop_all
   end
 end
 

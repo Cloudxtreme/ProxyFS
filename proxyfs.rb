@@ -1,10 +1,12 @@
 
-$LOAD_PATH.unshift File.dirname(__FILE__)
+require File.join(File.dirname(__FILE__), "environments/production")
 
 require "fusefs"
+require "escape"
 require "lib/garbage_collector"
 require "lib/fuse"
 require "lib/mirrors"
+require "lib/exit"
 
 if ARGV.size < 2
   puts "usage: [local path] [mount point]"
@@ -22,6 +24,14 @@ end
 unless File.directory?(mount_point)
   puts "not a directory: #{mount_point}"
   exit
+end
+
+open(File.join(File.dirname(__FILE__), "tmp/proxyfs.pid"), "w") { |stream| stream.write Process.pid.to_s }
+
+trap("SIGTERM") do
+  ProxyFS.exit
+
+  system Escape.shell_command([ "/bin/umount", mount_point ]).to_s
 end
 
 FuseFS.set_root ProxyFS::Fuse.new(local_path)

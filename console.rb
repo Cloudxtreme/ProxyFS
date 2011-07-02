@@ -1,8 +1,9 @@
 
-$LOAD_PATH.unshift File.dirname(__FILE__)
+require File.join(File.dirname(__FILE__), "environments/production")
 
 require "lib/mirror"
 require "lib/task"
+require "escape"
 
 include ProxyFS
 
@@ -57,12 +58,22 @@ def show_tasks(hostname = nil)
   nil
 end
 
-def set_paused
-  # TODO
-end
+def kill_now
+  pid_file = File.join(File.dirname(__FILE__), "tmp/proxyfs.pid")
 
-def set_unpaused
-  # TODO
+  if File.exists?(pid_file)
+    pid = File.read pid_file
+
+    if pid =~ /^[0-9]+/
+      system Escape.shell_command([ "/bin/kill", pid ]).to_s
+    end
+
+    puts "done"
+  else
+    puts "not found"
+  end
+
+  nil
 end
 
 def skip_one(hostname)
@@ -88,5 +99,6 @@ def show_help
   puts "* show_tasks - lists open tasks for all hosts"
   puts "* show_tasks [hostname] - lists open tasks for host"
   puts "* try_again [hostname] - triggers a retry of erroneous tasks on the host"
+  puts "* kill_now - kill the daemon gracefully"
 end
 

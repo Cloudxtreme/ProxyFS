@@ -19,9 +19,19 @@ module ProxyFS
       end
     end
 
+    def stop
+      @mutex.synchronize do
+        @thread.exit if @thread
+
+        yield if block_given?
+      end
+
+      true
+    end
+
     def collect!
-      Thread.new do
-        log_path = File.join(File.dirname(__FILE__), "../log")
+      @thread = Thread.new do
+        log_path = File.join(File.dirname(__FILE__), "../tmp/log")
 
         loop do
           synchronize do

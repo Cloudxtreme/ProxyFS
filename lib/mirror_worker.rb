@@ -22,8 +22,20 @@ module ProxyFS
       @queue.push task
     end
 
+    # All workers share the same mutex. Therefore we can shutdown all at once
+
+    def self.stop_all
+      @@mutex.synchronize do
+        @thread.exit if @thread
+
+        yield if block_given?
+      end
+
+      true
+    end
+
     def work!
-      Thread.new do
+      @thread = Thread.new do
         loop do
           task = @queue.pop
 
@@ -37,15 +49,15 @@ module ProxyFS
                 when "delete"
                   @mirror.delete task.path
                 when "write_to"
-                  file = File.join(File.dirname(__FILE__), "../log", task.file)
+                  file = File.join(File.dirname(__FILE__), "../tmp/log", task.file)
 
                   @mirror.write_to(task.path, File.read(file))
 
                   File.delete file
               end
-            end
 
-            task.done
+              task.done
+            end
           rescue Exception => e
             ErrorHandler.new(@mirror, task).handle e
 

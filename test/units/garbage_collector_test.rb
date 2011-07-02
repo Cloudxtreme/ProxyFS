@@ -17,8 +17,12 @@ class GarbageCollectorTest < ProxyFS::TestCase
     ProxyFS::GarbageCollector.instance.collect!
   end
 
+  def teardown
+    ProxyFS::GarbageCollector.instance.stop
+  end
+
   def test_collect!
-    path = File.join(File.dirname(__FILE__), "../../log/test.bin")
+    path = File.join(File.dirname(__FILE__), "../../tmp/log/test.bin")
 
     FileUtils.touch path
 
@@ -30,7 +34,7 @@ class GarbageCollectorTest < ProxyFS::TestCase
   def test_no_collect!
     ProxyFS::Task.create :command => "test", :mirror => fixture(:mirror), :path => "/test.txt", :file => "keep.bin"
 
-    path = File.join(File.dirname(__FILE__), "../../log/keep.bin")
+    path = File.join(File.dirname(__FILE__), "../../tmp/log/keep.bin")
 
     FileUtils.touch path
 
@@ -39,6 +43,10 @@ class GarbageCollectorTest < ProxyFS::TestCase
     assert File.exists?(path)
 
     File.delete path
+  end
+
+  def test_stop
+    assert ProxyFS::GarbageCollector.instance.stop
   end
 end
 

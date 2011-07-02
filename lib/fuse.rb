@@ -44,7 +44,7 @@ module ProxyFS
       file = "#{File.basename path}.#{ProxyFS.rand32}"
 
       @mirrors.write_to(path, file) do
-        open(File.join(File.dirname(__FILE__), "../log", file), "w") do |stream|
+        open(File.join(File.dirname(__FILE__), "../tmp/log", file), "w") do |stream|
           stream.write str
         end
 

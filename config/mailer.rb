@@ -18,7 +18,7 @@ ActionMailer::Base.sendmail_settings = {
   :arguments => "-i -t"
 }
 
-if defined?(PROXYFS_ENV) && PROXYFS_ENV == :test
+if PROXYFS_ENV == :test
   ActionMailer::Base.delivery_method = :test
 else
   ActionMailer::Base.delivery_method = :sendmail

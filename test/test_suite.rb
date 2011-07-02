@@ -1,7 +1,5 @@
 
-PROXYFS_ENV = :test
-
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..")
+require File.join(File.dirname(__FILE__), "../environments/test")
 
 require "test/unit/ui/console/testrunner"
 require "test/unit/testsuite"
@@ -17,7 +15,7 @@ require "test/units/fuse_test"
 
 class TestSuite
   def self.suite
-    suite = Test::Unit::TestSuite.new
+    suite = Test::Unit::TestSuite.new "ProxyFS"
 
     suite << ErrorHandlerTest.suite
     suite << GarbageCollectorTest.suite

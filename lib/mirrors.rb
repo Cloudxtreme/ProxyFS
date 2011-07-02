@@ -1,5 +1,6 @@
 
 require "singleton"
+require "thread"
 require "config/logger"
 require "lib/garbage_collector"
 require "lib/mirror_worker"
@@ -14,6 +15,8 @@ module ProxyFS
       @mirrors = Mirror.all
 
       @workers = @mirrors.collect { |mirror| MirrorWorker.new mirror }
+
+      @mutex = Mutex.new
     end
 
     def delete(path, &block)
@@ -38,22 +41,36 @@ module ProxyFS
       end
     end
 
+    def stop
+      # starts a new thread to prevent from ThreadErrors thrown by the mutex
+
+      Thread.new do
+        @mutex.synchronize do
+          yield
+        end
+      end
+
+      true
+    end
+
     private
 
     def replicate(block, attributes)
       tasks = GarbageCollector.instance.synchronize do
-        Task.transaction do
-          result = @mirrors.collect { |mirror| mirror.tasks.create! attributes }
+        @mutex.synchronize do
+          Task.transaction do
+            result = @mirrors.collect { |mirror| mirror.tasks.create! attributes }
 
-          begin
-            block.call
+            begin
+              block.call
 
-            LOGGER.info "local: #{attributes[:command]} #{attributes[:path]}: done"
-          rescue Exception
-            raise ActiveRecord::Rollback
+              LOGGER.info "local: #{attributes[:command]} #{attributes[:path]}: done"
+            rescue Exception
+              raise ActiveRecord::Rollback
+            end
+
+            result
           end
-
-          result
         end
       end
 

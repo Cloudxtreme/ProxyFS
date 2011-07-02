@@ -1,5 +1,4 @@
 log/*
-db/*
-status.log
+tmp/log/*
 test/tmp/*
-test.log
+tmp/*
