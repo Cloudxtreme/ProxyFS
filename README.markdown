@@ -2,42 +2,41 @@
 # ProxyFS
 
 Creates a proxy filesystem using fuse for ruby to mount a mirror of a local directory.
-Using the proxy mountpoint, changes to the files will be distributed to remote mirrors automatically and *live* using the SFTP protocol.
+Using the proxy mountpoint, changes to the files will be distributed *live* to remote mirrors automatically using the SFTP protocol.
 ProxyFS manages a log for each mirror, to re-sync a lost mirror when it is available again.
+If a host goes down, ProxyFS will save what it would send to the host if it would be online within its logs.
+When the host comes up again, ProxyFS remembers what it should send to the host to let the host resync.
+Nothing gets lost.
 
 ## State (Warning!)
 
 This is an early alpha. Currently it's more like a proof of concept than usable. You better don't use it yet.
 It will possibly delete all your files :-)
 
-Currently, we use mysql for logging. Therefore, you'll have to install a mysql server or other database supported by active record and having transactions.
+Currently, we use mysql for logging. Therefore, you'll have to install a mysql server or other ACID database supported by active record.
 
-Please note, that you need space within the log directory, 
+Please note, that you need space within the tmp/log directory, 
 because each file is temporary written to the log directory and stored until it is replicated to each mirror.
 
 ## Run
 
-Currently only Debian supported (within this README)
+Currently only Debian supported (within this README).
 
 <pre>
-  $ apt-get install fuse ruby irb libfusefs-ruby libnet-sftp2-ruby libactionmailer-ruby1.8 libactiverecord-ruby1.8 mysql-server libmysql-ruby
+  $ apt-get install fuse ruby irb libfusefs-ruby libnet-sftp2-ruby libmysql-ruby
+  $ apt-get install libactionmailer-ruby1.8 libactiverecord-ruby1.8 mysql-server
   $ modprobe fuse
 </pre>
 
 * Edit config/database.rb for mysql settings (logging).
-* Edit config/mailer.rb for email notifications.
+* Edit config/mailer.rb for email notifications. ProxyFS will send an email for every serious error.
 * To setup the database tables, run from the ProxyFS root directory as root (the database must already exist):
 
 <pre>
   $ ruby database.rb
 </pre>
 
-Then, to mount ProxyFS, run as root:
-
-<pre>
-  $ ruby proxyfs.rb [local path] [mount point]
-</pre>
-
+ProxyFS has a gread management tool, the ProxyFS console.
 To start the ProxyFS console, run as root:
 
 <pre>
@@ -45,7 +44,34 @@ To start the ProxyFS console, run as root:
 </pre>
 
 Within the console, enter 'show_help' and press enter.
+Currently, the following commands are supported:
+
+<pre>
+  $ irb -r console.rb
+  > show_help
+  show_help - shows this screen
+  show_status - shows a status of your mirrors
+  show_tasks - lists open tasks for all hosts
+  show_tasks '[hostname]' - lists open tasks for host
+  add_mirror '[hostname]', '[username]', '[base_path]' - add the mirror to the list
+  remove_mirror '[hostname]' - remove mirror from the list
+  try_again '[hostname]' - triggers a retry of erroneous tasks on the host
+  kill_now - kill the daemon gracefully
+</pre>
+
 From the console, you can add mirrors.
+
+<pre>
+  > add_mirror 'example.com', 'mirror_user', '/path/to/destination' 
+</pre>
+
+After you've added your mirrors, start the daemon.
+Run as root:
+
+<pre>
+  $ ruby proxyfs.rb [local path] [mount point]
+</pre>
+
 To exit from the console, enter 'quit'.
 
 If you want to kill ProxyFS, please use the console as well to let ProxyFS exit gracefully.
@@ -54,6 +80,14 @@ If you want to kill ProxyFS, please use the console as well to let ProxyFS exit 
   $ irb -r console.rb
   > kill_now
 </pre>
+
+To create an init script, you can as well kill the daemon gracefully by running:
+
+<pre>
+  $ kill -s SIGTERM [pid]
+</pre>
+
+The pid is stored in /path/to/proxyfs/tmp/proxyfs.pid
 
 ## Use Cases
 

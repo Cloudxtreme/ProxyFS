@@ -33,9 +33,17 @@ class MirrorTest < ProxyFS::TestCase
   end
 
   def test_tasks_order
-    task = fixture(:mirror).tasks.create! :command => "mkdir", :path => "/test"
+    task = fixture(:mirror).tasks.create :command => "mkdir", :path => "/test"
 
     assert_equal [ fixture(:task), task ], fixture(:mirror).tasks
+  end
+
+  def test_destroy_tasks
+    assert_difference("ProxyFS::Mirror.count", -1) do
+      assert_difference("ProxyFS::Task.count", -1) do
+        @fixtures[:mirror].destroy
+      end
+    end
   end
 
   def test_mkdir

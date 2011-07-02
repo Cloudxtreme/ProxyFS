@@ -43,7 +43,7 @@ module ProxyFS
 
     validates_uniqueness_of :hostname
 
-    has_many :tasks, :order => :id
+    has_many :tasks, :order => :id, :dependent => :destroy
 
     @@timeout = 5
 

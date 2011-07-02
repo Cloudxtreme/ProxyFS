@@ -3,7 +3,6 @@ require File.join(File.dirname(__FILE__), "environments/production")
 
 require "lib/mirror"
 require "lib/task"
-require "escape"
 
 include ProxyFS
 
@@ -58,15 +57,29 @@ def show_tasks(hostname = nil)
   nil
 end
 
-def kill_now
+def get_pid
   pid_file = File.join(File.dirname(__FILE__), "tmp/proxyfs.pid")
 
-  if File.exists?(pid_file)
-    pid = File.read pid_file
+  return File.read(pid_file).to_i if File.exists?(pid_file)
 
-    if pid =~ /^[0-9]+/
-      system Escape.shell_command([ "/bin/kill", pid ]).to_s
+  return nil
+end
+
+def running?
+  if get_pid
+    begin
+      Process.kill(0, get_pid)
+    rescue Exception
+      return false
     end
+  end
+
+  false
+end
+
+def kill_now
+  if get_pid
+    Process.kill(15, get_pid)
 
     puts "done"
   else
@@ -84,12 +97,44 @@ def skip_all(hostname)
   # TODO
 end
 
-def add_mirror(hostname, username, path)
-  # TODO
+def print_errors(obj)
+  obj.errors.each do |key, value|
+    puts "error: #{key} - #{value}"
+  end
+end
+
+def add_mirror(hostname, username, base_path)
+  if running?
+    puts "shut down the daemon first"
+  else
+    mirror = Mirror.new :hostname => hostname, :username => username, :base_path => base_path
+
+    if mirror.save
+      puts "done"
+    else
+      print_errors mirror
+    end
+  end
+
+  nil
 end
 
 def remove_mirror(hostname)
-  # TODO
+  if running?
+    puts "shut down the daemon first"
+  else
+    mirror = Mirror.find_by_hostname hostname
+
+    if mirror
+      mirror.destroy
+
+      puts "done"
+    else
+      puts "hostname not found"
+    end
+  end
+
+  nil
 end
 
 def show_help
@@ -97,8 +142,10 @@ def show_help
   puts "* show_help - shows this screen"
   puts "* show_status - shows a status of your mirrors"
   puts "* show_tasks - lists open tasks for all hosts"
-  puts "* show_tasks [hostname] - lists open tasks for host"
-  puts "* try_again [hostname] - triggers a retry of erroneous tasks on the host"
+  puts "* show_tasks '[hostname]' - lists open tasks for host"
+  puts "* add_mirror '[hostname]', '[username]', '[base_path]' - add the mirror to the list"
+  puts "* remove_mirror '[hostname]' - remove mirror from the list"
+  puts "* try_again '[hostname]' - triggers a retry of erroneous tasks on the host"
   puts "* kill_now - kill the daemon gracefully"
 end
 

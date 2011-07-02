@@ -26,6 +26,8 @@ unless File.directory?(mount_point)
   exit
 end
 
+Process.daemon
+
 open(File.join(File.dirname(__FILE__), "tmp/proxyfs.pid"), "w") { |stream| stream.write Process.pid.to_s }
 
 trap("SIGTERM") do
