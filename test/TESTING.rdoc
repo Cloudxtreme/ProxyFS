@@ -1,5 +1,5 @@
 
-# TESTING
+= TESTING
 
 To run the tests, you have to create a local user account 'test'.
 In addition, you have to copy your user's public key to the 'test' account.

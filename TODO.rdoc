@@ -1,0 +1,11 @@
+
+= Todo
+
+== High priority
+
+* add code documentation (rdoc)
+
+== Low priority
+
+* if mysql goes away, we have to recognize it and reconnect
+

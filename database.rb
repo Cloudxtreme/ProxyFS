@@ -1,5 +1,5 @@
 
-require File.join(File.dirname(__FILE__), "environments/production")
+require File.join(File.dirname(__FILE__), "config/production")
 
 require "config/database"
 require "db/migrations/create_mirrors"

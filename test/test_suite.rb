@@ -1,5 +1,5 @@
 
-require File.join(File.dirname(__FILE__), "../environments/test")
+require File.join(File.dirname(__FILE__), "../config/test")
 
 require "test/unit/ui/console/testrunner"
 require "test/unit/testsuite"

@@ -1,5 +1,5 @@
 
-require File.join(File.dirname(__FILE__), "environments/production")
+require File.join(File.dirname(__FILE__), "config/production")
 
 require "fusefs"
 require "escape"
@@ -30,9 +30,7 @@ Process.daemon true
 
 open(File.join(File.dirname(__FILE__), "tmp/proxyfs.pid"), "w") { |stream| stream.write Process.pid.to_s }
 
-trap("SIGTERM") do
-  ProxyFS.exit!
-end
+trap("SIGTERM") { ProxyFS.exit! }
 
 FuseFS.set_root ProxyFS::Fuse.new(local_path)
 FuseFS.mount_under(mount_point, "allow_other")
