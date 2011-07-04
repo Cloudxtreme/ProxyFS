@@ -51,7 +51,7 @@ because each file is temporary written to the log directory and stored until it 
 
 5. The ProxyFS console
 
-   ProxyFS has a gread management tool, the ProxyFS console. 
+   ProxyFS has a great management tool, the ProxyFS console. 
    To start the ProxyFS console, run as root:
 
      $ irb -r console.rb
@@ -130,11 +130,11 @@ Is designed for WAN connections! Only the local write is synchronous, remote wri
 After a network outage, ProxyFS will use its log to replicate the not yet written operations to the mirrors again.
 Therefore, mirrors can get down and will resync when they get available again.
 ProxyFS assumes to be all mirrors in sync when it starts.
-Therfore, you'll have to initially use rsync one time, if you don't start with empty directories.
+Therefore, you'll have to initially use rsync one time, if you don't start with empty directories.
 
 == Caveats
 
 ProxyFS is good for replicating rather static files (e.g. image, video or other media files), 
 but not that good for files that change very frequently (e.g. multiple times every hour or minute).
-Therfore, you better don't use it for replicating log files still in use, for example.
+Therefore, you better don't use it for replicating log files still in use, for example.
 

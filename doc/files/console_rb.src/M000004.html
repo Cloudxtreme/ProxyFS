@@ -12,7 +12,7 @@
 <body class="standalone-code">
   <pre><span class="ruby-comment cmt"># File console.rb, line 91</span>
 <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_pid</span>
-  <span class="ruby-identifier">pid_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-keyword kw">__FILE__</span>), <span class="ruby-value str">&quot;tmp/proxyfs.pid&quot;</span>)
+  <span class="ruby-identifier">pid_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">PROXYFS_ROOT</span>, <span class="ruby-value str">&quot;tmp/proxyfs.pid&quot;</span>)
 
   <span class="ruby-keyword kw">return</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">pid_file</span>).<span class="ruby-identifier">to_i</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">pid_file</span>)
 
