@@ -30,7 +30,7 @@ class FuseTest < ProxyFS::TestCase
   def setup
     super
 
-    @path = File.join(File.dirname(__FILE__), "../mnt")
+    @path = File.join(PROXYFS_ROOT, "test/mnt")
 
     @fuse = ProxyFS::Fuse.new @path
 

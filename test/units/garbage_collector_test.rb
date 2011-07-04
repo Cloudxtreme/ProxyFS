@@ -22,7 +22,7 @@ class GarbageCollectorTest < ProxyFS::TestCase
   end
 
   def test_collect!
-    path = File.join(File.dirname(__FILE__), "../../tmp/log/test.bin")
+    path = File.join(PROXYFS_ROOT, "tmp/log/test.bin")
 
     FileUtils.touch path
 
@@ -34,7 +34,7 @@ class GarbageCollectorTest < ProxyFS::TestCase
   def test_no_collect!
     ProxyFS::Task.create :command => "test", :mirror => fixture(:mirror), :path => "/test.txt", :file => "keep.bin"
 
-    path = File.join(File.dirname(__FILE__), "../../tmp/log/keep.bin")
+    path = File.join(PROXYFS_ROOT, "tmp/log/keep.bin")
 
     FileUtils.touch path
 

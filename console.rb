@@ -89,7 +89,7 @@ end
 # Returns the PID of the running daemon.
 
 def get_pid
-  pid_file = File.join(File.dirname(__FILE__), "tmp/proxyfs.pid")
+  pid_file = File.join(PROXYFS_ROOT, "tmp/proxyfs.pid")
 
   return File.read(pid_file).to_i if File.exists?(pid_file)
 

@@ -99,7 +99,7 @@ class MirrorWorkerTest < ProxyFS::TestCase
 
   def test_write_to
     assert_difference("@mirror.commands", [[ "write_to", "/test.txt", "test" ]]) do
-      open(File.join(File.dirname(__FILE__), "../../tmp/log/test.bin"), "w") do |stream|
+      open(File.join(PROXYFS_ROOT, "tmp/log/test.bin"), "w") do |stream|
         stream.write "test"
       end
 

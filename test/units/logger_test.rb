@@ -4,7 +4,7 @@ require "lib/logger"
 
 class LoggerTest < ProxyFS::TestCase
   def setup
-    @logger = ProxyFS::Logger.new File.join(File.dirname(__FILE__), "../../log/test.log")
+    @logger = ProxyFS::Logger.new File.join(PROXYFS_ROOT, "log/test.log")
   end
 
   def test_info

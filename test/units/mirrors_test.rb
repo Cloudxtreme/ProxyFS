@@ -49,7 +49,7 @@ class MirrorsTest < ProxyFS::TestCase
     assert_difference("Task.count") do
       assert_difference("@worker.size") do
         assert_difference("LOGGER.size") do
-          path = File.join(File.dirname(__FILE__), "../../tmp/log")
+          path = File.join(PROXYFS_ROOT, "tmp/log")
 
           num = Dir.entries(path).size
 
