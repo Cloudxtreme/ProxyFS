@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: ProxyFS::Fuse</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">ProxyFS::Fuse</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/fuse_rb.html">
+                lib/fuse.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Implements the FuseFS interface and all operations on the local directory
+(local mirror). Check FuseFS API.txt for additional details.
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000048">can_delete?</a>&nbsp;&nbsp;
+      <a href="#M000050">can_mkdir?</a>&nbsp;&nbsp;
+      <a href="#M000052">can_rmdir?</a>&nbsp;&nbsp;
+      <a href="#M000046">can_write?</a>&nbsp;&nbsp;
+      <a href="#M000040">contents</a>&nbsp;&nbsp;
+      <a href="#M000049">delete</a>&nbsp;&nbsp;
+      <a href="#M000042">directory?</a>&nbsp;&nbsp;
+      <a href="#M000044">executable?</a>&nbsp;&nbsp;
+      <a href="#M000041">file?</a>&nbsp;&nbsp;
+      <a href="#M000051">mkdir</a>&nbsp;&nbsp;
+      <a href="#M000039">new</a>&nbsp;&nbsp;
+      <a href="#M000043">read_file</a>&nbsp;&nbsp;
+      <a href="#M000053">rmdir</a>&nbsp;&nbsp;
+      <a href="#M000045">size</a>&nbsp;&nbsp;
+      <a href="#M000054">touch</a>&nbsp;&nbsp;
+      <a href="#M000047">write_to</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000039.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000039.html');return false;">
+          <span class="method-name">new</span><span class="method-args">(base)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a <a href="Fuse.html#M000039">new</a> <a href="Fuse.html">Fuse</a>
+object as a proxy for a local mirror directory at <tt>base</tt>.
+</p>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000048" class="method-detail">
+        <a name="M000048"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000048.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000048.html');return false;">
+          <span class="method-name">can_delete?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Always returns true. Permissions have to be enforced on a lower layer.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000050" class="method-detail">
+        <a name="M000050"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000050.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000050.html');return false;">
+          <span class="method-name">can_mkdir?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Always returns true. Permissions have to be enforced on a lower layer.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000052.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000052.html');return false;">
+          <span class="method-name">can_rmdir?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Always returns true. Permissions have to be enforced on a lower layer.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000046" class="method-detail">
+        <a name="M000046"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000046.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000046.html');return false;">
+          <span class="method-name">can_write?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Always returns true. Permissions have to be enforced on a lower layer.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000040" class="method-detail">
+        <a name="M000040"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000040.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000040.html');return false;">
+          <span class="method-name">contents</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Lists the <a href="Fuse.html#M000040">contents</a> of <tt>path</tt> on the
+local mirror.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000049" class="method-detail">
+        <a name="M000049"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000049.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000049.html');return false;">
+          <span class="method-name">delete</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Deletes the file at <tt>path</tt> on all mirrors.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000042" class="method-detail">
+        <a name="M000042"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000042.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000042.html');return false;">
+          <span class="method-name">directory?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns true if the directory at <tt>path</tt> on the local mirror exists
+and is a directory.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000044" class="method-detail">
+        <a name="M000044"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000044.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000044.html');return false;">
+          <span class="method-name">executable?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns true if the file at <tt>path</tt> on the local mirror exists and is
+executable.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000041" class="method-detail">
+        <a name="M000041"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000041.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000041.html');return false;">
+          <span class="method-name">file?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns true if the file at <tt>path</tt> on the local mirror exists and is
+a regular file.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000051" class="method-detail">
+        <a name="M000051"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000051.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000051.html');return false;">
+          <span class="method-name">mkdir</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a <a href="Fuse.html#M000039">new</a> directory at <tt>path</tt> on
+all mirrors.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000043" class="method-detail">
+        <a name="M000043"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000043.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000043.html');return false;">
+          <span class="method-name">read_file</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the <a href="Fuse.html#M000040">contents</a> of the file at
+<tt>path</tt> on the local mirror.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000053.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000053.html');return false;">
+          <span class="method-name">rmdir</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Deletes a directory at <tt>path</tt> on all mirrors.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000045" class="method-detail">
+        <a name="M000045"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000045.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000045.html');return false;">
+          <span class="method-name">size</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the <a href="Fuse.html#M000045">size</a> of the file at
+<tt>path</tt> on the local mirror in bytes.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000054" class="method-detail">
+        <a name="M000054"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000054.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000054.html');return false;">
+          <span class="method-name">touch</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+<tt><a href="Fuse.html#M000054">touch</a></tt> is not yet implemented.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000047.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000047.html');return false;">
+          <span class="method-name">write_to</span><span class="method-args">(path, str)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Writes the <a href="Fuse.html#M000040">contents</a> of <tt>str</tt> into
+the file at <tt>path</tt> on all mirrors. The <a
+href="Fuse.html#M000040">contents</a> are first written into a temporary
+file. Afterwards the file is moved to its final destination. This provides
+a bit more atomicity.
+</p>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

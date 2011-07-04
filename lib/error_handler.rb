@@ -4,13 +4,23 @@ require "config/logger"
 require "timeout"
 
 module ProxyFS
+  # Central management of exceptions raised during mirror replication.
+  #
+  #   ErrorHandler.new(mirror, task).handle exception
+
   class ErrorHandler
     @@timeout = 30
+
+    # Creates a new +ErrorHandler+ object for a +Mirror+ and a +Task+.
 
     def initialize(mirror, task)
       @mirror = mirror
       @task = task
     end
+
+    # Tries to handle mirror replication exceptions as clever as possible.
+    # Connection errors trigger continous retries.
+    # Errors, that need manual intervention, block a task, until the error is marked fixed.
 
     def handle(e)
       raise e

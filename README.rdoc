@@ -20,24 +20,36 @@ because each file is temporary written to the log directory and stored until it 
 
 == Install
 
-Currently only Debian supported (within this README).
-
 1. Install dependencies
 
-   $ apt-get install fuse ruby irb libfusefs-ruby libnet-sftp2-ruby libmysql-ruby
-   $ apt-get install libactionmailer-ruby1.8 libactiverecord-ruby1.8 mysql-server
+   On debian machines install dependencies like shown above:
+
+     $ apt-get install fuse ruby irb libfusefs-ruby libnet-sftp2-ruby libmysql-ruby
+     $ apt-get install libactionmailer-ruby1.8 libactiverecord-ruby1.8 mysql-server
 
 2. Setup Fuse
 
-   $ modprobe fuse
+   Enable the fuse kernel module:
 
-3. Edit config/database.rb for mysql settings (logging).
-4. Edit config/mailer.rb for email notifications. ProxyFS will send an email for every serious error.
-5. To setup the database tables, run from the ProxyFS root directory as root (the database must already exist):
+     $ modprobe fuse
 
-   $ ruby database.rb
+3. Database config
 
-6. The ProxyFS console
+   To let ProxyFS do logging, create a database for proxyfs:
+
+     $ mysqladmin create proxyfs
+ 
+   Edit config/database.rb to let ProxyFS connect to your database.
+   Afterwards, run as root from the ProxyFS root directory:
+
+     $ ruby database.rb
+
+4. Email config
+
+   Edit config/mailer.rb for email notifications.
+   ProxyFS will send an email for every serious error.
+
+5. The ProxyFS console
 
    ProxyFS has a gread management tool, the ProxyFS console. 
    To start the ProxyFS console, run as root:
@@ -60,34 +72,36 @@ Currently only Debian supported (within this README).
 
    To exit from the console, enter +quit+.
 
-7. Add mirrors
+6. Add mirrors
 
-   From the console, you can add mirrors.
+   From the console, add mirrors:
 
      $ irb -r console.rb
      > add_mirror 'example.com', 'mirror_user', '/path/to/destination' 
 
-8. Startup
+   Right now, only key based authentication is supported.
+
+7. Startup
 
    After you've added your mirrors, start the daemon.
-   Run as root:
+   Run as root from the ProxyFS root directory:
 
      $ ruby proxyfs.rb [local path] [mount point]
 
-9. Shutdown
+8. Shutdown
 
    If you want to kill ProxyFS, please use the console as well to let ProxyFS exit gracefully.
 
      $ irb -r console.rb
      > kill_now
 
-10. Init Scripts
+9. Init Scripts
 
-    To create an init script, you can as well kill the daemon gracefully by running:
+   To create an init script, you can as well kill the daemon gracefully by running:
 
-      $ kill -s SIGTERM [pid]
+     $ kill -s SIGTERM [pid]
 
-    The pid is stored in /path/to/proxyfs/tmp/proxyfs.pid
+   The pid is stored in /path/to/proxyfs/tmp/proxyfs.pid
 
 == Use Cases
 
@@ -115,6 +129,12 @@ Will be more robust, because a write to the proxy mountpoint will automatically 
 Is designed for WAN connections! Only the local write is synchronous, remote writes are asynchronous.
 After a network outage, ProxyFS will use its log to replicate the not yet written operations to the mirrors again.
 Therefore, mirrors can get down and will resync when they get available again.
-ProxyFS assumes to be all mirrors in sync when it starts. Therfore, you'll have to initially use rsync one time, for example.
+ProxyFS assumes to be all mirrors in sync when it starts.
+Therfore, you'll have to initially use rsync one time, if you don't start with empty directories.
 
+== Caveats
+
+ProxyFS is good for replicating rather static files (e.g. image, video or other media files), 
+but not that good for files that change very frequently (e.g. multiple times every hour or minute).
+Therfore, you better don't use it for replicating log files still in use, for example.
 

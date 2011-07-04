@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: README.rdoc</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>README.rdoc</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>README.rdoc
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Mon Jul 04 22:32:50 +0200 2011</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1><a href="../classes/ProxyFS.html">ProxyFS</a></h1>
+<p>
+Creates a proxy filesystem using fuse for ruby to mount a mirror of a local
+directory. Using the proxy mountpoint, changes to the files will be
+distributed <b>live</b> to remote mirrors automatically using the SFTP
+protocol. <a href="../classes/ProxyFS.html">ProxyFS</a> manages a log for
+each mirror, to re-sync a lost mirror when it is available again. If a host
+goes down, <a href="../classes/ProxyFS.html">ProxyFS</a> will save what it
+would send to the host if it would be online within its logs. When the host
+comes up again, <a href="../classes/ProxyFS.html">ProxyFS</a> remembers
+what it should send to the host to let the host resync. Nothing gets lost.
+</p>
+<h2>State (Warning!)</h2>
+<p>
+This is an early alpha. Currently it&#8216;s more like a proof of concept
+than usable. You better don&#8216;t use it yet. It will possibly delete all
+your files :-)
+</p>
+<p>
+Currently, we use mysql for logging. Therefore, you&#8216;ll have to
+install a mysql server or other ACID database supported by active record.
+</p>
+<p>
+Please note, that you need space within the tmp/log directory, because each
+file is temporary written to the log directory and stored until it is
+replicated to each mirror.
+</p>
+<h2>Install</h2>
+<ol>
+<li>Install dependencies
+
+<p>
+On debian machines install dependencies like shown above:
+</p>
+<pre>
+  $ apt-get install fuse ruby irb libfusefs-ruby libnet-sftp2-ruby libmysql-ruby
+  $ apt-get install libactionmailer-ruby1.8 libactiverecord-ruby1.8 mysql-server
+</pre>
+</li>
+<li>Setup Fuse
+
+<p>
+Enable the fuse kernel module:
+</p>
+<pre>
+  $ modprobe fuse
+</pre>
+</li>
+<li>Database config
+
+<p>
+To let <a href="../classes/ProxyFS.html">ProxyFS</a> do logging, create a
+database for proxyfs:
+</p>
+<pre>
+  $ mysqladmin create proxyfs
+</pre>
+<p>
+Edit config/database.rb to let <a
+href="../classes/ProxyFS.html">ProxyFS</a> connect to your database.
+Afterwards, run as root from the <a
+href="../classes/ProxyFS.html">ProxyFS</a> root directory:
+</p>
+<pre>
+  $ ruby database.rb
+</pre>
+</li>
+<li>Email config
+
+<p>
+Edit config/mailer.rb for email notifications. <a
+href="../classes/ProxyFS.html">ProxyFS</a> will send an email for every
+serious error.
+</p>
+</li>
+<li>The <a href="../classes/ProxyFS.html">ProxyFS</a> console
+
+<p>
+<a href="../classes/ProxyFS.html">ProxyFS</a> has a gread management tool,
+the <a href="../classes/ProxyFS.html">ProxyFS</a> console. To start the <a
+href="../classes/ProxyFS.html">ProxyFS</a> console, run as root:
+</p>
+<pre>
+  $ irb -r console.rb
+</pre>
+<p>
+Within the console, enter <tt>show_help</tt> and press enter. Currently,
+the following commands are supported:
+</p>
+<pre>
+  $ irb -r console.rb
+  &gt; show_help
+  show_help - shows this screen
+  show_status - shows a status of your mirrors
+  show_tasks - lists open tasks for all hosts
+  show_tasks '[hostname]' - lists open tasks for host
+  add_mirror '[hostname]', '[username]', '[base_path]' - add the mirror to the list
+  remove_mirror '[hostname]' - remove mirror from the list
+  try_again '[hostname]' - triggers a retry of erroneous tasks on the host
+  kill_now - kill the daemon gracefully
+</pre>
+<p>
+To exit from the console, enter <tt>quit</tt>.
+</p>
+</li>
+<li>Add mirrors
+
+<p>
+From the console, add mirrors:
+</p>
+<pre>
+  $ irb -r console.rb
+  &gt; add_mirror 'example.com', 'mirror_user', '/path/to/destination'
+</pre>
+<p>
+Right now, only key based authentication is supported.
+</p>
+</li>
+<li>Startup
+
+<p>
+After you&#8216;ve added your mirrors, start the daemon. Run as root from
+the <a href="../classes/ProxyFS.html">ProxyFS</a> root directory:
+</p>
+<pre>
+  $ ruby proxyfs.rb [local path] [mount point]
+</pre>
+</li>
+<li>Shutdown
+
+<p>
+If you want to kill <a href="../classes/ProxyFS.html">ProxyFS</a>, please
+use the console as well to let <a
+href="../classes/ProxyFS.html">ProxyFS</a> exit gracefully.
+</p>
+<pre>
+  $ irb -r console.rb
+  &gt; kill_now
+</pre>
+</li>
+<li>Init Scripts
+
+<p>
+To create an init script, you can as well kill the daemon gracefully by
+running:
+</p>
+<pre>
+  $ kill -s SIGTERM [pid]
+</pre>
+<p>
+The pid is stored in /path/to/proxyfs/tmp/proxyfs.pid
+</p>
+</li>
+</ol>
+<h2>Use Cases</h2>
+<p>
+Say you have multiple webservers and directories with a large collection of
+rather static files. You want both servers to have the same content within
+these directories.
+</p>
+<p>
+Now, you have multiple options to replicate/synchronize these directories
+</p>
+<ul>
+<li>rsync, running once a hour, day, week, whatever
+
+</li>
+</ul>
+<p>
+Unfortunately, rsync can&#8216;t replicate/synchronize the files in a
+<tt>live</tt> manner.
+</p>
+<ul>
+<li>drbd
+
+</li>
+</ul>
+<p>
+Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
+</p>
+<ul>
+<li>lsyncd or other inotify based replication/synchronization tools
+
+</li>
+</ul>
+<p>
+Unfortunately, these tools can IMHO get out of sync easily or have to
+continously run rsync to stay in sync. This behaviour is bad if you have to
+replicate/synchronize thousands of files and hundreds of gigabytes of data.
+</p>
+<ul>
+<li><b><a href="../classes/ProxyFS.html">ProxyFS</a></b>
+
+</li>
+</ul>
+<p>
+Will be more robust, because a write to the proxy mountpoint will
+automatically sync to all mirrors and a local directory live. Is designed
+for WAN connections! Only the local write is synchronous, remote writes are
+asynchronous. After a network outage, <a
+href="../classes/ProxyFS.html">ProxyFS</a> will use its log to replicate
+the not yet written operations to the mirrors again. Therefore, mirrors can
+get down and will resync when they get available again. <a
+href="../classes/ProxyFS.html">ProxyFS</a> assumes to be all mirrors in
+sync when it starts. Therfore, you&#8216;ll have to initially use rsync one
+time, if you don&#8216;t start with empty directories.
+</p>
+<h2>Caveats</h2>
+<p>
+<a href="../classes/ProxyFS.html">ProxyFS</a> is good for replicating
+rather static files (e.g. image, video or other media files), but not that
+good for files that change very frequently (e.g. multiple times every hour
+or minute). Therfore, you better don&#8216;t use it for replicating log
+files still in use, for example.
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

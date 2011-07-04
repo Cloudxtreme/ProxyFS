@@ -49,9 +49,15 @@ class MirrorsTest < ProxyFS::TestCase
     assert_difference("Task.count") do
       assert_difference("@worker.size") do
         assert_difference("LOGGER.size") do
+          path = File.join(File.dirname(__FILE__), "../../tmp/log")
+
+          num = Dir.entries(path).size
+
           @mirrors.write_to("/test.txt", "test") do
             # nothing
           end
+
+          assert_equal(num + 1, Dir.entries(path).size) # temporary replication file
         end
       end
     end
