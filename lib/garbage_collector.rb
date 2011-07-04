@@ -63,7 +63,7 @@ module ProxyFS
 
     def collect!
       @thread = Thread.new do
-        log_path = File.join(File.dirname(__FILE__), "../tmp/log")
+        log_path = File.join(PROXYFS_ROOT, "tmp/log")
 
         loop do
           synchronize do

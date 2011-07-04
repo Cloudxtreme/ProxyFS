@@ -74,11 +74,7 @@ module ProxyFS
                 when "delete"
                   @mirror.delete task.path
                 when "write_to"
-                  file = File.join(File.dirname(__FILE__), "../tmp/log", task.file)
-
-                  @mirror.write_to(task.path, File.read(file))
-
-                  File.delete file
+                  @mirror.write_to(task.path, File.read(File.join(PROXYFS_ROOT, "tmp/log", task.file)))
               end
 
               task.done

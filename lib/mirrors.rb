@@ -54,7 +54,9 @@ module ProxyFS
       file = "#{File.basename path}.#{ProxyFS.rand32}"
       
       wrapper = lambda do
-        open(File.join(File.dirname(__FILE__), "../tmp/log", file), "w") { |stream| stream.write str }
+LOGGER.info File.join(PROXYFS_ROOT, "tmp/log", file)
+
+        open(File.join(PROXYFS_ROOT, "tmp/log", file), "w") { |stream| stream.write str }
 
         block.call
       end
