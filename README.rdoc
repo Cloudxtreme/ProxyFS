@@ -13,7 +13,7 @@ Nothing gets lost.
 This is an early alpha. Currently it's more like a proof of concept than usable. You better don't use it yet.
 It will possibly delete all your files :-)
 
-Currently, we use mysql for logging. Therefore, you'll have to install a mysql server or other ACID database supported by active record.
+Currently, we use mysql for logging. Therefore, you'll have to install a mysql server or other ACID database supported by +ActiveRecord+.
 
 Please note, that you need space within the tmp/log directory, 
 because each file is temporary written to the log directory and stored until it is replicated to each mirror.
