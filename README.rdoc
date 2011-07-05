@@ -162,7 +162,7 @@ ProxyFS does not exactly behave <em>as usual</em> in a few ways:
     stream.write "test"
     stream.close
 
-  will <b>of course</b> create a new file <b>test.txt</b>.
+  will <b>of course</b> create a new file <tt>test.txt</tt>.
 
 * A file's timestamp will be different on each mirror, because ProxyFS does not mind, yet.
   The timestamp will be equal to the time of transfer on each mirror. 
