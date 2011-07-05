@@ -16,6 +16,8 @@ module ProxyFS
     def initialize(mirror, task)
       @mirror = mirror
       @task = task
+
+      @log_level = :error # log errors for level :error and :fatal initially
     end
 
     # Tries to handle mirror replication exceptions as clever as possible.
@@ -45,9 +47,19 @@ module ProxyFS
       @task.save if @task.changed?
 
       if @task.block
+        # a fatal error decreases the log level to log all errors again, after the error is marked fixed
+
+        @log_level = :error
+
         LOGGER.fatal "#{@mirror.hostname}: #{e}: manual fix required!"
       else
-        LOGGER.error "#{@mirror.hostname}: #{e}"
+        # log errors of level :error only one time
+
+        if @log_level == :error
+          LOGGER.error "#{@mirror.hostname}: #{e}"
+
+          @log_level = :fatal
+        end
       end
 
       loop do

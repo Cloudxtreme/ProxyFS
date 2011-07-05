@@ -110,23 +110,27 @@ You want both servers to have the same content within these directories.
 
 Now, you have multiple options to replicate/synchronize these directories
 
-* rsync, running once a hour, day, week, whatever
+* rsync
 
-Unfortunately, rsync can't replicate/synchronize the files in a +live+ manner.
+Batch replication running once a hour, day, week, whatever is a very good thing.
+Unfortunately, rsync can't replicate/synchronize the files in a +live+ manner and has to scan the full mirror for changes.
+This is not optimal for thousands of large files, because rsync has to calculate the differences of the mirrors each time.
 
 * drbd
 
-Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
+AKA raid1 over network.
+Unfortunately, drbd will only work/is recommended in a LAN setup using gigabit links (AFAIK).
 
-* lsyncd or other inotify based replication/synchronization tools
+* lsyncd
 
-Unfortunately, these tools can IMHO get out of sync easily or have to continously run rsync to stay in sync.
-This behaviour is bad if you have to replicate/synchronize thousands of files and hundreds of gigabytes of data.
+Unfortunately, inotify based replication can IMHO get out of sync easily or has to continously run rsync to stay in sync.
+This behaviour is bad if you have to replicate/synchronize thousands of files and hundreds of gigabytes of data together
+with more or less frequent connection interruptions.
 
 * *ProxyFS*
 
-Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory live.
-Is designed for WAN connections! Only the local write is synchronous, remote writes are asynchronous.
+Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory *live*.
+ProxyFS is designed for WAN connections. Only the local write is synchronous, remote writes are asynchronous.
 After a network outage, ProxyFS will use its log to replicate the not yet written operations to the mirrors again.
 Therefore, mirrors can get down and will resync when they get available again.
 ProxyFS assumes to be all mirrors in sync when it starts.
@@ -137,4 +141,30 @@ Therefore, you'll have to initially use rsync one time, if you don't start with 
 ProxyFS is good for replicating rather static files (e.g. image, video or other media files), 
 but not that good for files that change very frequently (e.g. multiple times every hour or minute).
 Therefore, you better don't use it for replicating log files still in use, for example.
+
+ProxyFS does not exactly behave <em>as usual</em> in a few ways:
+
+* +touch+ is not yet supported.
+
+    touch test.txt
+
+  will not work, because SFTP does not offer +touch+.
+  SFTP offers the manipulation of +file+ +attributes+ and ProxyFS will possibly use this feature in the future.
+
+* Empty files possibly won't be created.
+
+    stream = open("test.txt", "w")
+    stream.close
+
+  won't create a file <tt>test.txt</tt>, but
+
+    stream = open("test.txt", "w")
+    stream.write "test"
+    stream.close
+
+  will <b>of course</b> create a new file <b>test.txt</b>.
+
+* A file's timestamp will be different on each mirror, because ProxyFS does not mind, yet.
+  The timestamp will be equal to the time of transfer on each mirror. 
+  Possibly, this behaviour will change in the future.
 

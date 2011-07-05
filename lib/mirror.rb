@@ -7,7 +7,7 @@ require "lib/rand32"
 
 module Net
   module SFTP
-    # Useful extensions to Net::SFTP::Session.
+    # Useful extensions to <tt>Net::SFTP::Session</tt>.
 
     class Session
       # Returns true if a file or directory exists at +path+ on the remote host.
@@ -57,7 +57,7 @@ module ProxyFS
   #   # ...
   #
   # If unsuccessfull, the remote operations raise exceptions.
-  # The exception is one of +Timeout::Error+, +Net::SFTP::StatusException+ or +Errno::...+
+  # The exception is one of <tt>Timeout::Error</tt>, <tt>Net::SFTP::StatusException</tt> or <tt>Errno::...</tt>
 
   class Mirror < ActiveRecord::Base
     validates_presence_of :hostname, :username, :base_path

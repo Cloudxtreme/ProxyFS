@@ -64,6 +64,8 @@ module ProxyFS
         loop do
           task = @queue.pop
 
+          error_handler = ErrorHandler.new(@mirror, task)
+
           begin
             @@mutex.synchronize do
               case task.command
@@ -80,7 +82,7 @@ module ProxyFS
               task.done
             end
           rescue Exception => e
-            ErrorHandler.new(@mirror, task).handle e
+            error_handler.handle e
 
             retry
           end

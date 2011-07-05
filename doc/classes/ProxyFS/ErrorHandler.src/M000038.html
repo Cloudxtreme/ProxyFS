@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/error_handler.rb, line 25</span>
+  <pre><span class="ruby-comment cmt"># File lib/error_handler.rb, line 27</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle</span>(<span class="ruby-identifier">e</span>)
       <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span>
     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Timeout</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>
@@ -34,9 +34,19 @@
       <span class="ruby-ivar">@task</span>.<span class="ruby-identifier">save</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@task</span>.<span class="ruby-identifier">changed?</span>
 
       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@task</span>.<span class="ruby-identifier">block</span>
+        <span class="ruby-comment cmt"># a fatal error decreases the log level to log all errors again, after the error is marked fixed</span>
+
+        <span class="ruby-ivar">@log_level</span> = <span class="ruby-identifier">:error</span>
+
         <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">fatal</span> <span class="ruby-node">&quot;#{@mirror.hostname}: #{e}: manual fix required!&quot;</span>
       <span class="ruby-keyword kw">else</span>
-        <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;#{@mirror.hostname}: #{e}&quot;</span>
+        <span class="ruby-comment cmt"># log errors of level :error only one time</span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@log_level</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:error</span>
+          <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">error</span> <span class="ruby-node">&quot;#{@mirror.hostname}: #{e}&quot;</span>
+
+          <span class="ruby-ivar">@log_level</span> = <span class="ruby-identifier">:fatal</span>
+        <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">end</span>
 
       <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>

@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Mon Jul 04 23:06:39 +0200 2011</td>
+      <td>Tue Jul 05 20:18:53 +0200 2011</td>
     </tr>
     </table>
   </div>
@@ -233,13 +233,16 @@ these directories.
 Now, you have multiple options to replicate/synchronize these directories
 </p>
 <ul>
-<li>rsync, running once a hour, day, week, whatever
+<li>rsync
 
 </li>
 </ul>
 <p>
-Unfortunately, rsync can&#8216;t replicate/synchronize the files in a
-<tt>live</tt> manner.
+Batch replication running once a hour, day, week, whatever is a very good
+thing. Unfortunately, rsync can&#8216;t replicate/synchronize the files in
+a <tt>live</tt> manner and has to scan the full mirror for changes. This is
+not optimal for thousands of large files, because rsync has to calculate
+the differences of the mirrors each time.
 </p>
 <ul>
 <li>drbd
@@ -247,17 +250,19 @@ Unfortunately, rsync can&#8216;t replicate/synchronize the files in a
 </li>
 </ul>
 <p>
-Unfortunately, drbd will only work in a LAN using gigabit links (AFAIK).
+AKA raid1 over network. Unfortunately, drbd will only work/is recommended
+in a LAN setup using gigabit links (AFAIK).
 </p>
 <ul>
-<li>lsyncd or other inotify based replication/synchronization tools
+<li>lsyncd
 
 </li>
 </ul>
 <p>
-Unfortunately, these tools can IMHO get out of sync easily or have to
-continously run rsync to stay in sync. This behaviour is bad if you have to
-replicate/synchronize thousands of files and hundreds of gigabytes of data.
+Unfortunately, inotify based replication can IMHO get out of sync easily or
+has to continously run rsync to stay in sync. This behaviour is bad if you
+have to replicate/synchronize thousands of files and hundreds of gigabytes
+of data together with more or less frequent connection interruptions.
 </p>
 <ul>
 <li><b><a href="../classes/ProxyFS.html">ProxyFS</a></b>
@@ -266,15 +271,15 @@ replicate/synchronize thousands of files and hundreds of gigabytes of data.
 </ul>
 <p>
 Will be more robust, because a write to the proxy mountpoint will
-automatically sync to all mirrors and a local directory live. Is designed
-for WAN connections! Only the local write is synchronous, remote writes are
-asynchronous. After a network outage, <a
-href="../classes/ProxyFS.html">ProxyFS</a> will use its log to replicate
-the not yet written operations to the mirrors again. Therefore, mirrors can
-get down and will resync when they get available again. <a
-href="../classes/ProxyFS.html">ProxyFS</a> assumes to be all mirrors in
-sync when it starts. Therefore, you&#8216;ll have to initially use rsync
-one time, if you don&#8216;t start with empty directories.
+automatically sync to all mirrors and a local directory <b>live</b>. <a
+href="../classes/ProxyFS.html">ProxyFS</a> is designed for WAN connections.
+Only the local write is synchronous, remote writes are asynchronous. After
+a network outage, <a href="../classes/ProxyFS.html">ProxyFS</a> will use
+its log to replicate the not yet written operations to the mirrors again.
+Therefore, mirrors can get down and will resync when they get available
+again. <a href="../classes/ProxyFS.html">ProxyFS</a> assumes to be all
+mirrors in sync when it starts. Therefore, you&#8216;ll have to initially
+use rsync one time, if you don&#8216;t start with empty directories.
 </p>
 <h2>Caveats</h2>
 <p>
@@ -284,6 +289,48 @@ good for files that change very frequently (e.g. multiple times every hour
 or minute). Therefore, you better don&#8216;t use it for replicating log
 files still in use, for example.
 </p>
+<p>
+<a href="../classes/ProxyFS.html">ProxyFS</a> does not exactly behave
+<em>as usual</em> in a few ways:
+</p>
+<ul>
+<li><tt>touch</tt> is not yet supported.
+
+<pre>
+  touch test.txt
+</pre>
+<p>
+will not work, because SFTP does not offer <tt>touch</tt>. SFTP offers the
+manipulation of <tt>file</tt> <tt>attributes</tt> and <a
+href="../classes/ProxyFS.html">ProxyFS</a> will possibly use this feature
+in the future.
+</p>
+</li>
+<li>Empty files possibly won&#8216;t be created.
+
+<pre>
+  stream = open(&quot;test.txt&quot;, &quot;w&quot;)
+  stream.close
+</pre>
+<p>
+won&#8216;t create a file <tt>test.txt</tt>, but
+</p>
+<pre>
+  stream = open(&quot;test.txt&quot;, &quot;w&quot;)
+  stream.write &quot;test&quot;
+  stream.close
+</pre>
+<p>
+will <b>of course</b> create a new file <b>test.txt</b>.
+</p>
+</li>
+<li>A file&#8216;s timestamp will be different on each mirror, because <a
+href="../classes/ProxyFS.html">ProxyFS</a> does not mind, yet. The
+timestamp will be equal to the time of transfer on each mirror. Possibly,
+this behaviour will change in the future.
+
+</li>
+</ul>
 
     </div>
 

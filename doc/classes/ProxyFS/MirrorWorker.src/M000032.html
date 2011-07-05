@@ -16,6 +16,8 @@
         <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
           <span class="ruby-identifier">task</span> = <span class="ruby-ivar">@queue</span>.<span class="ruby-identifier">pop</span>
 
+          <span class="ruby-identifier">error_handler</span> = <span class="ruby-constant">ErrorHandler</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@mirror</span>, <span class="ruby-identifier">task</span>)
+
           <span class="ruby-keyword kw">begin</span>
             <span class="ruby-ivar">@@mutex</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
               <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">task</span>.<span class="ruby-identifier">command</span>
@@ -32,7 +34,7 @@
               <span class="ruby-identifier">task</span>.<span class="ruby-identifier">done</span>
             <span class="ruby-keyword kw">end</span>
           <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-            <span class="ruby-constant">ErrorHandler</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@mirror</span>, <span class="ruby-identifier">task</span>).<span class="ruby-identifier">handle</span> <span class="ruby-identifier">e</span>
+            <span class="ruby-identifier">error_handler</span>.<span class="ruby-identifier">handle</span> <span class="ruby-identifier">e</span>
 
             <span class="ruby-keyword kw">retry</span>
           <span class="ruby-keyword kw">end</span>

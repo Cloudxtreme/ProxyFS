@@ -6,7 +6,7 @@ require "lib/rand32"
 
 module ProxyFS
   # Implements the FuseFS interface and all operations on the local directory (local mirror).
-  # Check FuseFS API.txt for additional details.
+  # Check FuseFS <tt>API.txt</tt> for additional details.
 
   class Fuse
     # Creates a new Fuse object as a proxy for a local mirror directory at +base+.
@@ -119,6 +119,8 @@ module ProxyFS
     # +touch+ is not yet implemented.
 
     def touch(path)
+      LOGGER.info "touch #{path}"
+
       # nothing, yet
     end
   end
