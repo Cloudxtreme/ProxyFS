@@ -6,7 +6,7 @@ Using the proxy mountpoint, changes to the files will be distributed *live* to r
 ProxyFS manages a log for each mirror, to re-sync a lost mirror when it is available again.
 If a host goes down, ProxyFS will save what it would send to the host if it would be online within its logs.
 When the host comes up again, ProxyFS remembers what it should send to the host to let the host resync.
-Nothing gets lost.
+Nothing gets lost. Everything happens in correct order.
 
 == State (Warning!)
 
@@ -39,14 +39,14 @@ because each file is temporary written to the log directory and stored until it 
 
      $ mysqladmin create proxyfs
  
-   Edit config/database.rb to let ProxyFS connect to your database.
+   Edit <tt>config/database.rb</tt> to let ProxyFS connect to your database.
    Afterwards, run as root from the ProxyFS root directory:
 
      $ ruby database.rb
 
 4. Email config
 
-   Edit config/mailer.rb for email notifications.
+   Edit <tt>config/mailer.rb</tt> for email notifications.
    ProxyFS will send an email for every serious error.
 
 5. The ProxyFS console
@@ -101,7 +101,7 @@ because each file is temporary written to the log directory and stored until it 
 
      $ kill -s SIGTERM [pid]
 
-   The pid is stored in /path/to/proxyfs/tmp/proxyfs.pid
+   The pid is stored in <tt>/path/to/proxyfs/tmp/proxyfs.pid</tt>
 
 == Use Cases
 
@@ -149,7 +149,7 @@ ProxyFS does not exactly behave <em>as usual</em> in a few ways:
     touch test.txt
 
   will not work, because SFTP does not offer +touch+.
-  SFTP offers the manipulation of +file+ +attributes+ and ProxyFS will possibly use this feature in the future.
+  SFTP offers the manipulation of <tt>file attributes</tt> and ProxyFS will possibly use this feature in the future.
 
 * Empty files possibly won't be created.
 
@@ -166,5 +166,5 @@ ProxyFS does not exactly behave <em>as usual</em> in a few ways:
 
 * A file's timestamp will be different on each mirror, because ProxyFS does not mind, yet.
   The timestamp will be equal to the time of transfer on each mirror. 
-  Possibly, this behaviour will change in the future.
+  Possibly, this behaviour will change in the future, when SFTP <tt>file attribute</tt> manipulation will be used by ProxyFS.
 

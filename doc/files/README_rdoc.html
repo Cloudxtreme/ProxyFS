@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Tue Jul 05 20:23:05 +0200 2011</td>
+      <td>Tue Jul 05 20:31:43 +0200 2011</td>
     </tr>
     </table>
   </div>
@@ -80,6 +80,7 @@ goes down, <a href="../classes/ProxyFS.html">ProxyFS</a> will save what it
 would send to the host if it would be online within its logs. When the host
 comes up again, <a href="../classes/ProxyFS.html">ProxyFS</a> remembers
 what it should send to the host to let the host resync. Nothing gets lost.
+Everything happens in correct order.
 </p>
 <h2>State (Warning!)</h2>
 <p>
@@ -128,7 +129,7 @@ database for proxyfs:
   $ mysqladmin create proxyfs
 </pre>
 <p>
-Edit config/database.rb to let <a
+Edit <tt>config/database.rb</tt> to let <a
 href="../classes/ProxyFS.html">ProxyFS</a> connect to your database.
 Afterwards, run as root from the <a
 href="../classes/ProxyFS.html">ProxyFS</a> root directory:
@@ -140,7 +141,7 @@ href="../classes/ProxyFS.html">ProxyFS</a> root directory:
 <li>Email config
 
 <p>
-Edit config/mailer.rb for email notifications. <a
+Edit <tt>config/mailer.rb</tt> for email notifications. <a
 href="../classes/ProxyFS.html">ProxyFS</a> will send an email for every
 serious error.
 </p>
@@ -220,7 +221,7 @@ running:
   $ kill -s SIGTERM [pid]
 </pre>
 <p>
-The pid is stored in /path/to/proxyfs/tmp/proxyfs.pid
+The pid is stored in <tt>/path/to/proxyfs/tmp/proxyfs.pid</tt>
 </p>
 </li>
 </ol>
@@ -302,7 +303,7 @@ files still in use, for example.
 </pre>
 <p>
 will not work, because SFTP does not offer <tt>touch</tt>. SFTP offers the
-manipulation of <tt>file</tt> <tt>attributes</tt> and <a
+manipulation of <tt>file attributes</tt> and <a
 href="../classes/ProxyFS.html">ProxyFS</a> will possibly use this feature
 in the future.
 </p>
@@ -328,7 +329,8 @@ will <b>of course</b> create a new file <tt>test.txt</tt>.
 <li>A file&#8216;s timestamp will be different on each mirror, because <a
 href="../classes/ProxyFS.html">ProxyFS</a> does not mind, yet. The
 timestamp will be equal to the time of transfer on each mirror. Possibly,
-this behaviour will change in the future.
+this behaviour will change in the future, when SFTP <tt>file attribute</tt>
+manipulation will be used by <a href="../classes/ProxyFS.html">ProxyFS</a>.
 
 </li>
 </ul>
