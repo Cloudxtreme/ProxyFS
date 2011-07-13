@@ -49,10 +49,6 @@ class FuseTest < ProxyFS::TestCase
     assert @fuse.directory?("/test")
   end
 
-  def test_read_file
-    assert_equal("test", @fuse.read_file("/test.txt"))
-  end
-
   def test_executable?
     assert @fuse.executable?("/test.bin")
   end
@@ -77,14 +73,42 @@ class FuseTest < ProxyFS::TestCase
     assert @fuse.can_rmdir?("/test")
   end
 
-  def test_write_to
-    assert !File.exists?("/tmp.txt")
+  def test_raw_open
+    assert @fuse.raw_open("/test.txt", "w")
 
-    @fuse.write_to("/tmp.txt", "tmp")
+    assert !@fuse.raw_open("/missing.txt", "w")
+  end
 
-    assert_equal("tmp", File.read(File.join(@path, "tmp.txt")))
+  def test_raw_read
+    assert_equal("es", @fuse.raw_read("/test.txt", 1, 2))
+  end
 
-    File.delete File.join(@path, "tmp.txt")
+  def test_raw_write
+    temp_file = File.join(PROXYFS_ROOT, "tmp/local", "f012f0eb338e56f45c5446b6bd9899cdc526c003")
+
+    assert !File.exists?(temp_file)
+
+    assert_equal(2, @fuse.raw_write("/new.txt", 0, 2, "new"))
+
+    assert File.exists?(temp_file)
+
+    File.delete temp_file
+  end
+
+  def test_raw_close
+    temp_file = File.join(PROXYFS_ROOT, "tmp/local", "f012f0eb338e56f45c5446b6bd9899cdc526c003")
+
+    assert !File.exists?(File.join(@path, "new.txt"))
+
+    open(temp_file, "w") { |stream| stream.write "new" }
+
+    @fuse.raw_close "/new.txt"
+
+    assert_equal("new", File.read(File.join(@path, "new.txt")))
+
+    assert !File.exists?(temp_file)
+
+    File.delete File.join(@path, "new.txt")
   end
 
   def test_mkdir
@@ -108,7 +132,7 @@ class FuseTest < ProxyFS::TestCase
   end
 
   def test_delete
-    @fuse.write_to("/tmp.txt", "tmp")
+    open(File.join(@path, "tmp.txt"), "w") { |stream| stream.write "tmp" }
 
     assert File.exists?(File.join(@path, "tmp.txt"))
 

@@ -96,7 +96,8 @@ ActiveRecord to let the tasks be stored at a persistence layer.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000056">done</a>&nbsp;&nbsp;
+      <a href="#M000059">any_newer?</a>&nbsp;&nbsp;
+      <a href="#M000058">done</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -116,14 +117,34 @@ ActiveRecord to let the tasks be stored at a persistence layer.
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Instance methods</h3>
+      <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000056" class="method-detail">
-        <a name="M000056"></a>
+      <div id="method-M000059" class="method-detail">
+        <a name="M000059"></a>
 
         <div class="method-heading">
-          <a href="Task.src/M000056.html" target="Code" class="method-signature"
-            onclick="popupCode('Task.src/M000056.html');return false;">
+          <a href="Task.src/M000059.html" target="Code" class="method-signature"
+            onclick="popupCode('Task.src/M000059.html');return false;">
+          <span class="method-name">any_newer?</span><span class="method-args">(path, created)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Searches for <tt>Tasks</tt> for <tt>path</tt> newer than <tt>created</tt>.
+Returns <tt>nil</tt> if none found.
+</p>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
+
+        <div class="method-heading">
+          <a href="Task.src/M000058.html" target="Code" class="method-signature"
+            onclick="popupCode('Task.src/M000058.html');return false;">
           <span class="method-name">done</span><span class="method-args">()</span>
           </a>
         </div>
@@ -131,7 +152,7 @@ ActiveRecord to let the tasks be stored at a persistence layer.
         <div class="method-description">
           <p>
 Marks a <tt><a href="Task.html">Task</a></tt> as <tt><a
-href="Task.html#M000056">done</a></tt>, i.e. deletes the <tt><a
+href="Task.html#M000058">done</a></tt>, i.e. deletes the <tt><a
 href="Task.html">Task</a></tt>.
 </p>
         </div>

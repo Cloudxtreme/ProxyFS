@@ -2,7 +2,6 @@
 require "singleton"
 require "thread"
 require "config/logger"
-require "lib/garbage_collector"
 require "lib/mirror_worker"
 require "lib/mirror"
 require "lib/task"
@@ -21,11 +20,9 @@ module ProxyFS
     # Creates a new +Mirrors+ object.
 
     def initialize
-      @mirrors = Mirror.all
+     @mirrors = Mirror.all
 
-      @workers = @mirrors.collect { |mirror| MirrorWorker.new mirror }
-
-      @mutex = Mutex.new
+     @workers = @mirrors.collect { |mirror| MirrorWorker.new mirror }
     end
 
     # Creates a new replication +Task+ to delete the file at +path+ on all remote mirrors.
@@ -46,28 +43,20 @@ module ProxyFS
       replicate(block, :command => "rmdir", :path => path)
     end
 
-    # Creates a new replication +Task+ to write the contents of +str+ to all remote mirrors.
-    # Additionally creates a temporary replication file to store +str+ until it has been replicated.
-    # The +GarbageCollector+ will delete it afterwards.
+    # Creates a new replication +Task+ to write the contents of +file+ to +path+ on all remote mirrors.
 
-    def write_to(path, str, &block)
-      file = "#{File.basename path}.#{ProxyFS.rand32}"
-      
+    def upload(file, path, &block)
       wrapper = lambda do
-        open(File.join(PROXYFS_ROOT, "tmp/log", file), "w") { |stream| stream.write str }
-
         block.call
       end
 
-      replicate(wrapper, :command => "write_to", :path => path, :file => file)
+      replicate(wrapper, :command => "upload", :path => path, :file => file)
     end
 
     # Starts a +MirrorWorker+ for each +Mirror+.
 
     def replicate!
-      @workers.each do |worker|
-        worker.work!
-      end
+      @workers.each { |worker| worker.work! }
     end
 
     # Stops the creation of replication tasks gracefully.
@@ -77,15 +66,7 @@ module ProxyFS
     #   end
 
     def stop!
-      # starts a new thread to prevent from ThreadErrors raised by the mutex
-
-      Thread.new do
-        @mutex.synchronize do
-          yield
-        end
-      end
-
-      true
+      PathMutex.stop! { yield }
     end
 
     private
@@ -95,33 +76,28 @@ module ProxyFS
     # responsible to execute the operation on the local mirror as well (i.e. the local filesystem).
     # If the block raises an exception, the created tasks are deleted again using a +rollback+
     # operation of the database backend. Therefore, if the local operation fails, the operation
-    # won't be replicated to the remote mirrors. In addition, the block is responsible for creating
-    # an optional temporary replication file that is used for +write_to+. Therefore, +replicate+
-    # is synchronized with the  +GarbageCollector+ to assure that these replication files are not
-    # deleted until the database transaction is finished.
+    # won't be replicated to the remote mirrors.
 
     def replicate(block, attributes)
-      tasks = GarbageCollector.instance.synchronize do
-        @mutex.synchronize do
-          Task.transaction do
-            # create a +Task+ for each +Mirror+
+      tasks = PathMutex.lock(attributes[:path]) do
+        Task.transaction do
+          # create a task for each mirror
 
-            result = @mirrors.collect { |mirror| mirror.tasks.create! attributes }
+          result = @mirrors.collect { |mirror| mirror.tasks.create attributes }
 
-            # call the block that is responsible for the local filesystem operations
+          # call the block that is responsible for the local filesystem operations
 
-            begin
-              block.call
+          begin
+            block.call
 
-              LOGGER.info "local: #{attributes[:command]} #{attributes[:path]}: done"
-            rescue Exception
-              # the local operation failed, now roll back to remove the already created tasks
+            LOGGER.info "local: #{attributes[:command]} #{attributes[:path]}: done"
+          rescue Exception
+            # the local operation failed, now roll back to remove the already created tasks
 
-              raise ActiveRecord::Rollback
-            end
-
-            result
+            raise ActiveRecord::Rollback
           end
+
+          result
         end
       end
 

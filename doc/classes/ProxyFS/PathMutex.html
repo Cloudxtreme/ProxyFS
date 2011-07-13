@@ -5,10 +5,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Class: Net::SFTP::Session</title>
+  <title>Class: ProxyFS::PathMutex</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
-  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
   <script type="text/javascript">
   // <![CDATA[
 
@@ -50,13 +50,13 @@
         <table class="header-table">
         <tr class="top-aligned-row">
           <td><strong>Class</strong></td>
-          <td class="class-name-in-header">Net::SFTP::Session</td>
+          <td class="class-name-in-header">ProxyFS::PathMutex</td>
         </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../../../files/lib/mirror_rb.html">
-                lib/mirror.rb
+                <a href="../../files/lib/path_mutex_rb.html">
+                lib/path_mutex.rb
                 </a>
         <br />
             </td>
@@ -80,9 +80,15 @@
 
     <div id="description">
       <p>
-Useful extensions to <tt><a
-href="Session.html">Net::SFTP::Session</a></tt>.
+<tt><a href="PathMutex.html">PathMutex</a></tt> provides an easy to use
+file locking mechanism to guarantee mutual exlusion when critical
+operations on files are executed.
 </p>
+<pre>
+  PathMutex.lock(&quot;/path/to/file&quot;) do
+    # e.g. delete file
+  end
+</pre>
 
     </div>
 
@@ -93,8 +99,8 @@ href="Session.html">Net::SFTP::Session</a></tt>.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000013">exists?</a>&nbsp;&nbsp;
-      <a href="#M000014">mv!</a>&nbsp;&nbsp;
+      <a href="#M000057">lock</a>&nbsp;&nbsp;
+      <a href="#M000056">stop!</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -114,42 +120,43 @@ href="Session.html">Net::SFTP::Session</a></tt>.
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Instance methods</h3>
+      <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000013" class="method-detail">
-        <a name="M000013"></a>
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
 
         <div class="method-heading">
-          <a href="Session.src/M000013.html" target="Code" class="method-signature"
-            onclick="popupCode('Session.src/M000013.html');return false;">
-          <span class="method-name">exists?</span><span class="method-args">(path)</span>
+          <a href="PathMutex.src/M000057.html" target="Code" class="method-signature"
+            onclick="popupCode('PathMutex.src/M000057.html');return false;">
+          <span class="method-name">lock</span><span class="method-args">(path) {|| ...}</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns true if a file or directory exists at <tt>path</tt> on the remote
-host.
+Creates a mutex for <tt>path</tt> if non exists, yet. Afterwards, the mutex
+is locked and the given block is called. At the end, the mutex is unlocked,
+and the mutex for <tt>path</tt> is deleted to ensure that the mutex will
+not stay in memory forever, i.e. can be cleaned up by the garbage
+collector. Creation and deletion of the mutex is synchronized.
 </p>
         </div>
       </div>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
 
         <div class="method-heading">
-          <a href="Session.src/M000014.html" target="Code" class="method-signature"
-            onclick="popupCode('Session.src/M000014.html');return false;">
-          <span class="method-name">mv!</span><span class="method-args">(source, destination)</span>
+          <a href="PathMutex.src/M000056.html" target="Code" class="method-signature"
+            onclick="popupCode('PathMutex.src/M000056.html');return false;">
+          <span class="method-name">stop!</span><span class="method-args">(&amp;block)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Moves a file (only files) from <tt>source</tt> to <tt>destination</tt> on
-the remote host to provide more atomicity. Unfortunately, the operation is
-not yet completly atomic. If the file at <tt>destination</tt> already
-exists, it is deleted first.
+Causes <tt><a href="PathMutex.html">PathMutex</a></tt> to not accept any
+further locking and calls the given <tt>block</tt> when done.
 </p>
         </div>
       </div>

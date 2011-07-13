@@ -3,7 +3,6 @@ require File.join(File.dirname(__FILE__), "config/production")
 
 require "fusefs"
 require "escape"
-require "lib/garbage_collector"
 require "lib/fuse"
 require "lib/mirrors"
 require "lib/exit"
@@ -26,7 +25,9 @@ unless File.directory?(mount_point)
   exit
 end
 
-Process.daemon true
+#Process.daemon true
+
+sleep 1
 
 open(File.join(PROXYFS_ROOT, "tmp/proxyfs.pid"), "w") { |stream| stream.write Process.pid.to_s }
 
@@ -36,7 +37,6 @@ FuseFS.set_root ProxyFS::Fuse.new(local_path)
 FuseFS.mount_under(mount_point, "allow_other")
 
 ProxyFS::Mirrors.instance.replicate!
-ProxyFS::GarbageCollector.instance.collect!
 
 FuseFS.run
 

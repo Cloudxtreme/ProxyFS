@@ -10,13 +10,11 @@
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/mirrors.rb, line 23</span>
+  <pre><span class="ruby-comment cmt"># File lib/mirrors.rb, line 22</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
-      <span class="ruby-ivar">@mirrors</span> = <span class="ruby-constant">Mirror</span>.<span class="ruby-identifier">all</span>
+     <span class="ruby-ivar">@mirrors</span> = <span class="ruby-constant">Mirror</span>.<span class="ruby-identifier">all</span>
 
-      <span class="ruby-ivar">@workers</span> = <span class="ruby-ivar">@mirrors</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">mirror</span><span class="ruby-operator">|</span> <span class="ruby-constant">MirrorWorker</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">mirror</span> }
-
-      <span class="ruby-ivar">@mutex</span> = <span class="ruby-constant">Mutex</span>.<span class="ruby-identifier">new</span>
+     <span class="ruby-ivar">@workers</span> = <span class="ruby-ivar">@mirrors</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">mirror</span><span class="ruby-operator">|</span> <span class="ruby-constant">MirrorWorker</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">mirror</span> }
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

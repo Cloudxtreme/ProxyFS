@@ -91,7 +91,7 @@ log level.
 Don&#8216;t mix up <tt><a href="Logger.html">Logger</a></tt> with
 replication logging done by <a href="../ProxyFS.html">ProxyFS</a>. <tt><a
 href="Logger.html">Logger</a></tt> writes plain old debug or <a
-href="Logger.html#M000060">error</a> messages to a log file.
+href="Logger.html#M000063">error</a> messages to a log file.
 </p>
 
     </div>
@@ -103,11 +103,11 @@ href="Logger.html#M000060">error</a> messages to a log file.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000060">error</a>&nbsp;&nbsp;
-      <a href="#M000061">fatal</a>&nbsp;&nbsp;
-      <a href="#M000059">info</a>&nbsp;&nbsp;
-      <a href="#M000057">new</a>&nbsp;&nbsp;
-      <a href="#M000058">size</a>&nbsp;&nbsp;
+      <a href="#M000063">error</a>&nbsp;&nbsp;
+      <a href="#M000064">fatal</a>&nbsp;&nbsp;
+      <a href="#M000062">info</a>&nbsp;&nbsp;
+      <a href="#M000060">new</a>&nbsp;&nbsp;
+      <a href="#M000061">size</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -129,19 +129,19 @@ href="Logger.html#M000060">error</a> messages to a log file.
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000057" class="method-detail">
-        <a name="M000057"></a>
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
 
         <div class="method-heading">
-          <a href="Logger.src/M000057.html" target="Code" class="method-signature"
-            onclick="popupCode('Logger.src/M000057.html');return false;">
+          <a href="Logger.src/M000060.html" target="Code" class="method-signature"
+            onclick="popupCode('Logger.src/M000060.html');return false;">
           <span class="method-name">new</span><span class="method-args">(file)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Creates a <a href="Logger.html#M000057">new</a> <tt><a
+Creates a <a href="Logger.html#M000060">new</a> <tt><a
 href="Logger.html">Logger</a></tt> object to write log messages into a file
 located at <tt>file</tt>.
 </p>
@@ -150,12 +150,12 @@ located at <tt>file</tt>.
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000060" class="method-detail">
-        <a name="M000060"></a>
+      <div id="method-M000063" class="method-detail">
+        <a name="M000063"></a>
 
         <div class="method-heading">
-          <a href="Logger.src/M000060.html" target="Code" class="method-signature"
-            onclick="popupCode('Logger.src/M000060.html');return false;">
+          <a href="Logger.src/M000063.html" target="Code" class="method-signature"
+            onclick="popupCode('Logger.src/M000063.html');return false;">
           <span class="method-name">error</span><span class="method-args">(str)</span>
           </a>
         </div>
@@ -163,7 +163,43 @@ located at <tt>file</tt>.
         <div class="method-description">
           <p>
 Send/write notification <tt>str</tt> of log level <tt><a
-href="Logger.html#M000060">error</a></tt>.
+href="Logger.html#M000063">error</a></tt>.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000064" class="method-detail">
+        <a name="M000064"></a>
+
+        <div class="method-heading">
+          <a href="Logger.src/M000064.html" target="Code" class="method-signature"
+            onclick="popupCode('Logger.src/M000064.html');return false;">
+          <span class="method-name">fatal</span><span class="method-args">(str)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Send/write notification <tt>str</tt> of log level <tt><a
+href="Logger.html#M000064">fatal</a></tt>.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000062" class="method-detail">
+        <a name="M000062"></a>
+
+        <div class="method-heading">
+          <a href="Logger.src/M000062.html" target="Code" class="method-signature"
+            onclick="popupCode('Logger.src/M000062.html');return false;">
+          <span class="method-name">info</span><span class="method-args">(str)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Writes log message <tt>str</tt> of log level <tt><a
+href="Logger.html#M000062">info</a></tt>.
 </p>
         </div>
       </div>
@@ -174,42 +210,6 @@ href="Logger.html#M000060">error</a></tt>.
         <div class="method-heading">
           <a href="Logger.src/M000061.html" target="Code" class="method-signature"
             onclick="popupCode('Logger.src/M000061.html');return false;">
-          <span class="method-name">fatal</span><span class="method-args">(str)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Send/write notification <tt>str</tt> of log level <tt><a
-href="Logger.html#M000061">fatal</a></tt>.
-</p>
-        </div>
-      </div>
-
-      <div id="method-M000059" class="method-detail">
-        <a name="M000059"></a>
-
-        <div class="method-heading">
-          <a href="Logger.src/M000059.html" target="Code" class="method-signature"
-            onclick="popupCode('Logger.src/M000059.html');return false;">
-          <span class="method-name">info</span><span class="method-args">(str)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Writes log message <tt>str</tt> of log level <tt><a
-href="Logger.html#M000059">info</a></tt>.
-</p>
-        </div>
-      </div>
-
-      <div id="method-M000058" class="method-detail">
-        <a name="M000058"></a>
-
-        <div class="method-heading">
-          <a href="Logger.src/M000058.html" target="Code" class="method-signature"
-            onclick="popupCode('Logger.src/M000058.html');return false;">
           <span class="method-name">size</span><span class="method-args">()</span>
           </a>
         </div>

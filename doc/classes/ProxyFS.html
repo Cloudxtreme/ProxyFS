@@ -55,6 +55,10 @@
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
+                <a href="../files/lib/path_mutex_rb.html">
+                lib/path_mutex.rb
+                </a>
+        <br />
                 <a href="../files/lib/mirror_worker_rb.html">
                 lib/mirror_worker.rb
                 </a>
@@ -65,10 +69,6 @@
         <br />
                 <a href="../files/lib/logger_rb.html">
                 lib/logger.rb
-                </a>
-        <br />
-                <a href="../files/lib/garbage_collector_rb.html">
-                lib/garbage_collector.rb
                 </a>
         <br />
                 <a href="../files/lib/mirror_rb.html">
@@ -116,8 +116,8 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000017">exit!</a>&nbsp;&nbsp;
-      <a href="#M000016">rand32</a>&nbsp;&nbsp;
+      <a href="#M000016">exit!</a>&nbsp;&nbsp;
+      <a href="#M000015">rand32</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -133,12 +133,12 @@
 
       Class <a href="ProxyFS/ErrorHandler.html" class="link">ProxyFS::ErrorHandler</a><br />
 Class <a href="ProxyFS/Fuse.html" class="link">ProxyFS::Fuse</a><br />
-Class <a href="ProxyFS/GarbageCollector.html" class="link">ProxyFS::GarbageCollector</a><br />
 Class <a href="ProxyFS/Logger.html" class="link">ProxyFS::Logger</a><br />
 Class <a href="ProxyFS/Mailer.html" class="link">ProxyFS::Mailer</a><br />
 Class <a href="ProxyFS/Mirror.html" class="link">ProxyFS::Mirror</a><br />
 Class <a href="ProxyFS/MirrorWorker.html" class="link">ProxyFS::MirrorWorker</a><br />
 Class <a href="ProxyFS/Mirrors.html" class="link">ProxyFS::Mirrors</a><br />
+Class <a href="ProxyFS/PathMutex.html" class="link">ProxyFS::PathMutex</a><br />
 Class <a href="ProxyFS/Task.html" class="link">ProxyFS::Task</a><br />
 
     </div>
@@ -153,12 +153,12 @@ Class <a href="ProxyFS/Task.html" class="link">ProxyFS::Task</a><br />
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000017" class="method-detail">
-        <a name="M000017"></a>
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
 
         <div class="method-heading">
-          <a href="ProxyFS.src/M000017.html" target="Code" class="method-signature"
-            onclick="popupCode('ProxyFS.src/M000017.html');return false;">
+          <a href="ProxyFS.src/M000016.html" target="Code" class="method-signature"
+            onclick="popupCode('ProxyFS.src/M000016.html');return false;">
           <span class="method-name">exit!</span><span class="method-args">()</span>
           </a>
         </div>
@@ -166,19 +166,18 @@ Class <a href="ProxyFS/Task.html" class="link">ProxyFS::Task</a><br />
         <div class="method-description">
           <p>
 Shuts down <a href="ProxyFS.html">ProxyFS</a> services (<tt><a
-href="ProxyFS/GarbageCollector.html">GarbageCollector</a></tt>, <tt><a
 href="ProxyFS/MirrorWorker.html">MirrorWorker</a></tt>, <tt><a
-href="ProxyFS/Mirrors.html">Mirrors</a></tt>) gracefully.
+href="ProxyFS/Mirrors.html">Mirrors</a></tt>) gracefully and then exits.
 </p>
         </div>
       </div>
 
-      <div id="method-M000016" class="method-detail">
-        <a name="M000016"></a>
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
 
         <div class="method-heading">
-          <a href="ProxyFS.src/M000016.html" target="Code" class="method-signature"
-            onclick="popupCode('ProxyFS.src/M000016.html');return false;">
+          <a href="ProxyFS.src/M000015.html" target="Code" class="method-signature"
+            onclick="popupCode('ProxyFS.src/M000015.html');return false;">
           <span class="method-name">rand32</span><span class="method-args">()</span>
           </a>
         </div>

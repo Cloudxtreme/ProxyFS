@@ -15,9 +15,6 @@ It will possibly delete all your files :-)
 
 Currently, we use mysql for logging. Therefore, you'll have to install a mysql server or other ACID database supported by +ActiveRecord+.
 
-Please note, that you need space within the tmp/log directory, 
-because each file is temporary written to the log directory and stored until it is replicated to each mirror.
-
 == Install
 
 1. Install dependencies
@@ -127,6 +124,14 @@ Unfortunately, inotify based replication can IMHO get out of sync easily or has 
 This behaviour is bad if you have to replicate/synchronize thousands of files and hundreds of gigabytes of data together
 with more or less frequent connection interruptions.
 
+* XtreemFS
+
+IMHO XtreemFS provides a similar approach to ProxyFS. Looks a bit full blown.
+
+* GlusterFS
+
+GlusterFS's geo-replication feature seems to be promising.
+
 * *ProxyFS*
 
 Will be more robust, because a write to the proxy mountpoint will automatically sync to all mirrors and a local directory *live*.
@@ -142,7 +147,10 @@ ProxyFS is good for replicating rather static files (e.g. image, video or other 
 but not that good for files that change very frequently (e.g. multiple times every hour or minute).
 Therefore, you better don't use it for replicating log files still in use, for example.
 
-ProxyFS does not exactly behave <em>as usual</em> in a few ways:
+Don't do any writes to the replicated directories on the mirrors directly, i.e. circumventing ProxyFS.
+If you write directly on a mirror to the replicated directories, ProxyFS can of course not keep the directories synchronized.
+
+ProxyFS does not exactly behave <em>as usual</em> filesystems in a few ways:
 
 * +touch+ is not yet supported.
 
@@ -151,20 +159,11 @@ ProxyFS does not exactly behave <em>as usual</em> in a few ways:
   will not work, because SFTP does not offer +touch+.
   SFTP offers the manipulation of <tt>file attributes</tt> and ProxyFS will possibly use this feature in the future.
 
-* Empty files possibly won't be created.
-
-    stream = open("test.txt", "w")
-    stream.close
-
-  won't create a file <tt>test.txt</tt>, but
-
-    stream = open("test.txt", "w")
-    stream.write "test"
-    stream.close
-
-  will <b>of course</b> create a new file <tt>test.txt</tt>.
-
 * A file's timestamp will be different on each mirror, because ProxyFS does not mind, yet.
   The timestamp will be equal to the time of transfer on each mirror. 
   Possibly, this behaviour will change in the future, when SFTP <tt>file attribute</tt> manipulation will be used by ProxyFS.
+
+* +mv+ will remove the file and re-create it for the new name.
+
+* +mv+ for directories won't work.
 

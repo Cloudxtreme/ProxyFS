@@ -5,14 +5,18 @@
 
 <html>
 <head>
-  <title>rand32 (ProxyFS)</title>
+  <title>exit! (ProxyFS)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/rand32.rb, line 5</span>
-  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">rand32</span>
-    <span class="ruby-identifier">rand</span> <span class="ruby-value">0xffffffff</span>
+  <pre><span class="ruby-comment cmt"># File lib/exit.rb, line 9</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">exit!</span>
+    <span class="ruby-constant">MirrorWorker</span>.<span class="ruby-identifier">stop_all!</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-constant">Mirrors</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">stop!</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">exit</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
   <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

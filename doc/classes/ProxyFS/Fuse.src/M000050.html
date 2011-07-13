@@ -10,8 +10,10 @@
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/fuse.rb, line 93</span>
+  <pre><span class="ruby-comment cmt"># File lib/fuse.rb, line 158</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">can_mkdir?</span>(<span class="ruby-identifier">path</span>)
+      <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;can_mkdir? #{path}&quot;</span>
+
       <span class="ruby-keyword kw">true</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>

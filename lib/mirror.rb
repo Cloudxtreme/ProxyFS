@@ -33,16 +33,6 @@ module Net
 
         rename!(source, destination)
       end
-
-      # Uploads the contents of +str+ to file at +path+ on the remote host.
-
-      def upload_data!(path, str)
-        file.open(path, "w") do |stream|
-          StringIO.open(str) do |string_io|
-            stream.write string_io.read(1024) until string_io.eof?
-          end
-        end
-      end
     end
   end
 end
@@ -53,7 +43,7 @@ module ProxyFS
   #
   #   mirror = Mirror.create :hostname => "example.com", :username => "username", :base_path => "/path/to/destination"
   #   mirror.mkdir "/test"
-  #   mirror.write_to("/test/test.txt", "test")
+  #   mirror.upload("/path/to/file", "/test/test.txt")
   #   # ...
   #
   # If unsuccessfull, the remote operations raise exceptions.
@@ -67,6 +57,16 @@ module ProxyFS
     has_many :tasks, :order => :id, :dependent => :destroy
 
     @@timeout = 5
+
+    # Returns true if a file or directory exists at +path+ on the remote host.
+
+    def exists?(path)
+      Timeout::timeout(@@timeout) do
+        connect do |sftp|
+          return sftp.exists? File.join(base_path, path)
+        end
+      end
+    end
 
     # Creates a new directory at +path+ on the remote host.
 
@@ -88,18 +88,18 @@ module ProxyFS
       end
     end
 
-    # Writes the contents of +str+ to +path+ on the remote host.
+    # Uploads the file at +file+ to location +path+ on the remote host.
 
-    def write_to(path, str)
-      Timeout::timeout([ str.size / 1024.0, @@timeout ].max) do 
+    def upload(file, path)
+      # assume a 1K/s connection min
+
+      Timeout::timeout([ File.size(file) / 1024.0, @@timeout ].max) do 
         connect do |sftp|
-          # assume a 1K/s connection min
+          temp_file = File.join(base_path, File.dirname(path), ".#{File.basename path}.#{ProxyFS.rand32}")
 
-          tempfile = File.join(base_path, File.dirname(path), ".#{File.basename path}.#{ProxyFS.rand32}")
+          sftp.upload!(file, temp_file)
 
-          sftp.upload_data!(tempfile, str)
-
-          sftp.mv!(tempfile, File.join(base_path, path))
+          sftp.mv!(temp_file, File.join(base_path, path))
         end
       end
     end

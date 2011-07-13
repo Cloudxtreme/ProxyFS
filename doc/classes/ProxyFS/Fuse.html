@@ -81,7 +81,13 @@
     <div id="description">
       <p>
 Implements the FuseFS interface and all operations on the local directory
-(local mirror). Check FuseFS <tt>API.txt</tt> for additional details.
+(local mirror). Uses FuseFS <tt>raw</tt> methods (<tt><a
+href="Fuse.html#M000042">raw_open</a></tt>, <tt><a
+href="Fuse.html#M000043">raw_read</a></tt>, <tt><a
+href="Fuse.html#M000044">raw_write</a></tt>, <tt><a
+href="Fuse.html#M000045">raw_close</a></tt>), because <tt><a
+href="Fuse.html#M000046">write_to</a></tt> is buggy when append mode is
+used. Check FuseFS <tt>API.txt</tt> for additional details.
 </p>
 
     </div>
@@ -96,19 +102,23 @@ Implements the FuseFS interface and all operations on the local directory
       <a href="#M000048">can_delete?</a>&nbsp;&nbsp;
       <a href="#M000050">can_mkdir?</a>&nbsp;&nbsp;
       <a href="#M000052">can_rmdir?</a>&nbsp;&nbsp;
-      <a href="#M000046">can_write?</a>&nbsp;&nbsp;
-      <a href="#M000040">contents</a>&nbsp;&nbsp;
+      <a href="#M000041">can_write?</a>&nbsp;&nbsp;
+      <a href="#M000036">contents</a>&nbsp;&nbsp;
       <a href="#M000049">delete</a>&nbsp;&nbsp;
-      <a href="#M000042">directory?</a>&nbsp;&nbsp;
-      <a href="#M000044">executable?</a>&nbsp;&nbsp;
-      <a href="#M000041">file?</a>&nbsp;&nbsp;
+      <a href="#M000038">directory?</a>&nbsp;&nbsp;
+      <a href="#M000039">executable?</a>&nbsp;&nbsp;
+      <a href="#M000037">file?</a>&nbsp;&nbsp;
       <a href="#M000051">mkdir</a>&nbsp;&nbsp;
-      <a href="#M000039">new</a>&nbsp;&nbsp;
-      <a href="#M000043">read_file</a>&nbsp;&nbsp;
+      <a href="#M000035">new</a>&nbsp;&nbsp;
+      <a href="#M000045">raw_close</a>&nbsp;&nbsp;
+      <a href="#M000042">raw_open</a>&nbsp;&nbsp;
+      <a href="#M000043">raw_read</a>&nbsp;&nbsp;
+      <a href="#M000044">raw_write</a>&nbsp;&nbsp;
+      <a href="#M000047">read_file</a>&nbsp;&nbsp;
       <a href="#M000053">rmdir</a>&nbsp;&nbsp;
-      <a href="#M000045">size</a>&nbsp;&nbsp;
+      <a href="#M000040">size</a>&nbsp;&nbsp;
       <a href="#M000054">touch</a>&nbsp;&nbsp;
-      <a href="#M000047">write_to</a>&nbsp;&nbsp;
+      <a href="#M000046">write_to</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -130,20 +140,20 @@ Implements the FuseFS interface and all operations on the local directory
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000039" class="method-detail">
-        <a name="M000039"></a>
+      <div id="method-M000035" class="method-detail">
+        <a name="M000035"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000039.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000039.html');return false;">
+          <a href="Fuse.src/M000035.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000035.html');return false;">
           <span class="method-name">new</span><span class="method-args">(base)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Creates a <a href="Fuse.html#M000039">new</a> <a href="Fuse.html">Fuse</a>
-object as a proxy for a local mirror directory at <tt>base</tt>.
+Creates a <a href="Fuse.html#M000035">new</a> <a href="Fuse.html">Fuse</a>
+object acting as a proxy for a local mirror directory at <tt>base</tt>.
 </p>
         </div>
       </div>
@@ -162,7 +172,8 @@ object as a proxy for a local mirror directory at <tt>base</tt>.
       
         <div class="method-description">
           <p>
-Always returns true. Permissions have to be enforced on a lower layer.
+Always returns <tt>true</tt>. Permissions have to be enforced on a lower
+layer.
 </p>
         </div>
       </div>
@@ -179,7 +190,8 @@ Always returns true. Permissions have to be enforced on a lower layer.
       
         <div class="method-description">
           <p>
-Always returns true. Permissions have to be enforced on a lower layer.
+Always returns <tt>true</tt>. Permissions have to be enforced on a lower
+layer.
 </p>
         </div>
       </div>
@@ -196,41 +208,43 @@ Always returns true. Permissions have to be enforced on a lower layer.
       
         <div class="method-description">
           <p>
-Always returns true. Permissions have to be enforced on a lower layer.
+Always returns <tt>true</tt>. Permissions have to be enforced on a lower
+layer.
 </p>
         </div>
       </div>
 
-      <div id="method-M000046" class="method-detail">
-        <a name="M000046"></a>
+      <div id="method-M000041" class="method-detail">
+        <a name="M000041"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000046.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000046.html');return false;">
+          <a href="Fuse.src/M000041.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000041.html');return false;">
           <span class="method-name">can_write?</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Always returns true. Permissions have to be enforced on a lower layer.
+Always returns <tt>true</tt>. Permissions have to be enforced on a lower
+layer.
 </p>
         </div>
       </div>
 
-      <div id="method-M000040" class="method-detail">
-        <a name="M000040"></a>
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000040.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000040.html');return false;">
+          <a href="Fuse.src/M000036.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000036.html');return false;">
           <span class="method-name">contents</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Lists the <a href="Fuse.html#M000040">contents</a> of <tt>path</tt> on the
+Lists the <a href="Fuse.html#M000036">contents</a> of <tt>path</tt> on the
 local mirror.
 </p>
         </div>
@@ -253,56 +267,56 @@ Deletes the file at <tt>path</tt> on all mirrors.
         </div>
       </div>
 
-      <div id="method-M000042" class="method-detail">
-        <a name="M000042"></a>
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000042.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000042.html');return false;">
+          <a href="Fuse.src/M000038.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000038.html');return false;">
           <span class="method-name">directory?</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns true if the directory at <tt>path</tt> on the local mirror exists
-and is a directory.
+Returns <tt>true</tt> if the directory at <tt>path</tt> on the local mirror
+exists and is a directory.
 </p>
         </div>
       </div>
 
-      <div id="method-M000044" class="method-detail">
-        <a name="M000044"></a>
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000044.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000044.html');return false;">
+          <a href="Fuse.src/M000039.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000039.html');return false;">
           <span class="method-name">executable?</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns true if the file at <tt>path</tt> on the local mirror exists and is
-executable.
+Returns <tt>true</tt> if the file at <tt>path</tt> on the local mirror
+exists and is executable.
 </p>
         </div>
       </div>
 
-      <div id="method-M000041" class="method-detail">
-        <a name="M000041"></a>
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000041.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000041.html');return false;">
+          <a href="Fuse.src/M000037.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000037.html');return false;">
           <span class="method-name">file?</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns true if the file at <tt>path</tt> on the local mirror exists and is
-a regular file.
+Returns <tt>true</tt> if the file at <tt>path</tt> on the local mirror
+exists and is a regular file.
 </p>
         </div>
       </div>
@@ -319,8 +333,42 @@ a regular file.
       
         <div class="method-description">
           <p>
-Creates a <a href="Fuse.html#M000039">new</a> directory at <tt>path</tt> on
+Creates a <a href="Fuse.html#M000035">new</a> directory at <tt>path</tt> on
 all mirrors.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000045" class="method-detail">
+        <a name="M000045"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000045.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000045.html');return false;">
+          <span class="method-name">raw_close</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Closes the file for <tt>path</tt>.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000042" class="method-detail">
+        <a name="M000042"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000042.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000042.html');return false;">
+          <span class="method-name">raw_open</span><span class="method-args">(path, mode)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Opens the file for <tt>path</tt> if the file is not already opened.
 </p>
         </div>
       </div>
@@ -331,14 +379,50 @@ all mirrors.
         <div class="method-heading">
           <a href="Fuse.src/M000043.html" target="Code" class="method-signature"
             onclick="popupCode('Fuse.src/M000043.html');return false;">
+          <span class="method-name">raw_read</span><span class="method-args">(path, off, sz)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Reads <tt>sz</tt> bytes of the file for <tt>path</tt> starting at offset
+<tt>off</tt>.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000044" class="method-detail">
+        <a name="M000044"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000044.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000044.html');return false;">
+          <span class="method-name">raw_write</span><span class="method-args">(path, off, sz, buf)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Writes <tt>sz</tt> bytes of <tt>buf</tt> to the file for <tt>path</tt>
+starting at offset <tt>off</tt>.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
+
+        <div class="method-heading">
+          <a href="Fuse.src/M000047.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000047.html');return false;">
           <span class="method-name">read_file</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns the <a href="Fuse.html#M000040">contents</a> of the file at
-<tt>path</tt> on the local mirror.
+Returns the <a href="Fuse.html#M000036">contents</a> of the file at
+<tt>path</tt>.
 </p>
         </div>
       </div>
@@ -360,19 +444,19 @@ Deletes a directory at <tt>path</tt> on all mirrors.
         </div>
       </div>
 
-      <div id="method-M000045" class="method-detail">
-        <a name="M000045"></a>
+      <div id="method-M000040" class="method-detail">
+        <a name="M000040"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000045.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000045.html');return false;">
+          <a href="Fuse.src/M000040.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000040.html');return false;">
           <span class="method-name">size</span><span class="method-args">(path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns the <a href="Fuse.html#M000045">size</a> of the file at
+Returns the <a href="Fuse.html#M000040">size</a> of the file at
 <tt>path</tt> on the local mirror in bytes.
 </p>
         </div>
@@ -395,23 +479,21 @@ Returns the <a href="Fuse.html#M000045">size</a> of the file at
         </div>
       </div>
 
-      <div id="method-M000047" class="method-detail">
-        <a name="M000047"></a>
+      <div id="method-M000046" class="method-detail">
+        <a name="M000046"></a>
 
         <div class="method-heading">
-          <a href="Fuse.src/M000047.html" target="Code" class="method-signature"
-            onclick="popupCode('Fuse.src/M000047.html');return false;">
+          <a href="Fuse.src/M000046.html" target="Code" class="method-signature"
+            onclick="popupCode('Fuse.src/M000046.html');return false;">
           <span class="method-name">write_to</span><span class="method-args">(path, str)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Writes the <a href="Fuse.html#M000040">contents</a> of <tt>str</tt> into
-the file at <tt>path</tt> on all mirrors. The <a
-href="Fuse.html#M000040">contents</a> are first written into a temporary
-file. Afterwards the file is moved to its final destination. This provides
-a bit more atomicity.
+Writes the <a href="Fuse.html#M000036">contents</a> of <tt>str</tt> to a
+file at <tt>path</tt>. Used by <a href="Fuse.html">Fuse</a> for
+<tt>mv</tt>.
 </p>
         </div>
       </div>

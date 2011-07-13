@@ -106,7 +106,7 @@ for every mirror, you have to call only once:
       <a href="#M000027">replicate!</a>&nbsp;&nbsp;
       <a href="#M000025">rmdir</a>&nbsp;&nbsp;
       <a href="#M000028">stop!</a>&nbsp;&nbsp;
-      <a href="#M000026">write_to</a>&nbsp;&nbsp;
+      <a href="#M000026">upload</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -259,18 +259,15 @@ Stops the creation of replication tasks gracefully.
         <div class="method-heading">
           <a href="Mirrors.src/M000026.html" target="Code" class="method-signature"
             onclick="popupCode('Mirrors.src/M000026.html');return false;">
-          <span class="method-name">write_to</span><span class="method-args">(path, str, &amp;block)</span>
+          <span class="method-name">upload</span><span class="method-args">(file, path, &amp;block)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
 Creates a <a href="Mirrors.html#M000022">new</a> replication <tt><a
-href="Task.html">Task</a></tt> to write the contents of <tt>str</tt> to all
-remote mirrors. Additionally creates a temporary replication file to store
-<tt>str</tt> until it has been replicated. The <tt><a
-href="GarbageCollector.html">GarbageCollector</a></tt> will <a
-href="Mirrors.html#M000023">delete</a> it afterwards.
+href="Task.html">Task</a></tt> to write the contents of <tt>file</tt> to
+<tt>path</tt> on all remote mirrors.
 </p>
         </div>
       </div>

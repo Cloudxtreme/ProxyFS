@@ -4,13 +4,14 @@ require "lib/mirrors"
 require "lib/mirror_worker"
 
 module ProxyFS
-  # Shuts down ProxyFS services (+GarbageCollector+, +MirrorWorker+, +Mirrors+) gracefully.
+  # Shuts down ProxyFS services (+MirrorWorker+, +Mirrors+) gracefully and then exits.
 
   def self.exit!
-    GarbageCollector.instance.stop!
-    MirrorWorker.stop_all!
-
-    Mirrors.instance.stop! { Kernel.exit }
+    MirrorWorker.stop_all! do
+      Mirrors.instance.stop! do
+        Kernel.exit
+      end
+    end
   end
 end
 

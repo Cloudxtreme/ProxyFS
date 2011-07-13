@@ -79,7 +79,7 @@ module ProxyFS
     def log(level, str)
       @mutex.synchronize do
         begin
-          @stream.puts "#{level}: #{str}"
+          @stream.puts "#{Time.now} #{level}: #{str}"
           @stream.flush
         rescue Exception
           false

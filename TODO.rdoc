@@ -3,5 +3,6 @@
 
 == High priority
 
+* adapt tests (no filesystem logfiles any more)
 * if mysql goes away, we should to recognize it
 

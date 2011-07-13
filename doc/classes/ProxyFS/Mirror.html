@@ -87,7 +87,7 @@ persistency.
 <pre>
   mirror = Mirror.create :hostname =&gt; &quot;example.com&quot;, :username =&gt; &quot;username&quot;, :base_path =&gt; &quot;/path/to/destination&quot;
   mirror.mkdir &quot;/test&quot;
-  mirror.write_to(&quot;/test/test.txt&quot;, &quot;test&quot;)
+  mirror.upload(&quot;/path/to/file&quot;, &quot;/test/test.txt&quot;)
   # ...
 </pre>
 <p>
@@ -106,9 +106,10 @@ one of <tt>Timeout::Error</tt>, <tt>Net::SFTP::StatusException</tt> or
 
       <div class="name-list">
       <a href="#M000021">delete</a>&nbsp;&nbsp;
+      <a href="#M000017">exists?</a>&nbsp;&nbsp;
       <a href="#M000018">mkdir</a>&nbsp;&nbsp;
       <a href="#M000019">rmdir</a>&nbsp;&nbsp;
-      <a href="#M000020">write_to</a>&nbsp;&nbsp;
+      <a href="#M000020">upload</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -143,6 +144,24 @@ one of <tt>Timeout::Error</tt>, <tt>Net::SFTP::StatusException</tt> or
         <div class="method-description">
           <p>
 Deletes the file at <tt>path</tt> on the remote host.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
+
+        <div class="method-heading">
+          <a href="Mirror.src/M000017.html" target="Code" class="method-signature"
+            onclick="popupCode('Mirror.src/M000017.html');return false;">
+          <span class="method-name">exists?</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns true if a file or directory exists at <tt>path</tt> on the remote
+host.
 </p>
         </div>
       </div>
@@ -187,13 +206,14 @@ Deletes the directory at <tt>path</tt> on the remote host.
         <div class="method-heading">
           <a href="Mirror.src/M000020.html" target="Code" class="method-signature"
             onclick="popupCode('Mirror.src/M000020.html');return false;">
-          <span class="method-name">write_to</span><span class="method-args">(path, str)</span>
+          <span class="method-name">upload</span><span class="method-args">(file, path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Writes the contents of <tt>str</tt> to <tt>path</tt> on the remote host.
+Uploads the file at <tt>file</tt> to location <tt>path</tt> on the remote
+host.
 </p>
         </div>
       </div>

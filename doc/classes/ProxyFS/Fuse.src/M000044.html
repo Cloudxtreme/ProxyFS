@@ -5,14 +5,20 @@
 
 <html>
 <head>
-  <title>executable? (ProxyFS::Fuse)</title>
+  <title>raw_write (ProxyFS::Fuse)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/fuse.rb, line 46</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">executable?</span>(<span class="ruby-identifier">path</span>)
-      <span class="ruby-constant">File</span>.<span class="ruby-identifier">executable?</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@base</span>, <span class="ruby-identifier">path</span>)
+  <pre><span class="ruby-comment cmt"># File lib/fuse.rb, line 93</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raw_write</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">off</span>, <span class="ruby-identifier">sz</span>, <span class="ruby-identifier">buf</span>)
+      <span class="ruby-constant">LOGGER</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;raw_write #{path} #{off} #{sz}&quot;</span>
+
+      <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@files</span>[<span class="ruby-identifier">path</span>]
+        <span class="ruby-ivar">@files</span>[<span class="ruby-identifier">path</span>].<span class="ruby-identifier">seek</span>(<span class="ruby-identifier">off</span>, <span class="ruby-constant">IO</span><span class="ruby-operator">::</span><span class="ruby-constant">SEEK_SET</span>)
+
+        <span class="ruby-ivar">@files</span>[<span class="ruby-identifier">path</span>].<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buf</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">sz</span>])
+      <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

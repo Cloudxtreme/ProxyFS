@@ -5,20 +5,18 @@
 
 <html>
 <head>
-  <title>stop_all! (ProxyFS::MirrorWorker)</title>
+  <title>stop! (ProxyFS::PathMutex)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/mirror_worker.rb, line 37</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop_all!</span>
-      <span class="ruby-comment cmt"># All workers share the same mutex. Therefore we can shutdown all at once</span>
-
+  <pre><span class="ruby-comment cmt"># File lib/path_mutex.rb, line 19</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop!</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
       <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span>
         <span class="ruby-ivar">@@mutex</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
-          <span class="ruby-ivar">@thread</span>.<span class="ruby-identifier">exit</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@thread</span>
+          <span class="ruby-ivar">@@stop</span> = <span class="ruby-identifier">block</span>
 
-          <span class="ruby-keyword kw">yield</span>
+          <span class="ruby-ivar">@@stop</span>.<span class="ruby-identifier">call</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@mutexes</span>.<span class="ruby-identifier">empty?</span>
         <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span></pre>

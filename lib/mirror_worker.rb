@@ -1,8 +1,8 @@
 
 require "singleton"
-require "net/sftp"
 require "thread"
 require "lib/error_handler"
+require "lib/path_mutex"
 
 module ProxyFS
   # Takes all tasks for a remote +Mirror+, and tries to execute them until successfully replicated.
@@ -29,28 +29,21 @@ module ProxyFS
     end
 
     # Stops the workers for all mirrors at once.
-    # If an optional block is given, the block is called when the workers are stopped.
     #
     #   MirrorWorker.instance.stop_all! do
     #     # the workers are stopped
     #   end
-    #
-    # or
-    #
-    #   MirrorWorker.instance.stop_all!
-    #   
-    #   # the workers are stopped
     
     def self.stop_all!
       # All workers share the same mutex. Therefore we can shutdown all at once
 
-      @@mutex.synchronize do
-        @thread.exit if @thread
+      Thread.new do
+        @@mutex.synchronize do
+          @thread.exit if @thread
 
-        yield if block_given?
+          yield
+        end
       end
-
-      true
     end
 
     # Creates a new thread to process the +Task+ queue.
@@ -68,18 +61,22 @@ module ProxyFS
 
           begin
             @@mutex.synchronize do
-              case task.command
-                when "mkdir"
-                  @mirror.mkdir task.path
-                when "rmdir"
-                  @mirror.rmdir task.path
-                when "delete"
-                  @mirror.delete task.path
-                when "write_to"
-                  @mirror.write_to(task.path, File.read(File.join(PROXYFS_ROOT, "tmp/log", task.file)))
-              end
+              PathMutex.lock(task.path) do
+                unless Task.any_newer?(task.path, task.created_at)
+                  case task.command
+                    when "mkdir"
+                      @mirror.mkdir(task.path) if !@mirror.exists?(task.path)
+                    when "rmdir"
+                      @mirror.rmdir(task.path) if @mirror.exists?(task.path)
+                    when "delete"
+                      @mirror.delete(task.path) if @mirror.exists?(task.path)
+                    when "upload"
+                      @mirror.upload(task.file, task.path)
+                  end
+                end
 
-              task.done
+                task.done
+              end
             end
           rescue Exception => e
             error_handler.handle e

@@ -142,27 +142,18 @@ href="MirrorWorker.html">MirrorWorker</a></tt> object.
         <div class="method-heading">
           <a href="MirrorWorker.src/M000031.html" target="Code" class="method-signature"
             onclick="popupCode('MirrorWorker.src/M000031.html');return false;">
-          <span class="method-name">stop_all!</span><span class="method-args">() {|if block_given?| ...}</span>
+          <span class="method-name">stop_all!</span><span class="method-args">() {|| ...}</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Stops the workers for all mirrors at once. If an optional block is given,
-the block is called when the workers are stopped.
+Stops the workers for all mirrors at once.
 </p>
 <pre>
   MirrorWorker.instance.stop_all! do
     # the workers are stopped
   end
-</pre>
-<p>
-or
-</p>
-<pre>
-  MirrorWorker.instance.stop_all!
-
-  # the workers are stopped
 </pre>
         </div>
       </div>

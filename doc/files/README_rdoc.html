@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Tue Jul 05 20:31:43 +0200 2011</td>
+      <td>Wed Jul 13 19:42:30 +0200 2011</td>
     </tr>
     </table>
   </div>
@@ -92,11 +92,6 @@ your files :-)
 Currently, we use mysql for logging. Therefore, you&#8216;ll have to
 install a mysql server or other ACID database supported by
 <tt>ActiveRecord</tt>.
-</p>
-<p>
-Please note, that you need space within the tmp/log directory, because each
-file is temporary written to the log directory and stored until it is
-replicated to each mirror.
 </p>
 <h2>Install</h2>
 <ol>
@@ -267,6 +262,23 @@ have to replicate/synchronize thousands of files and hundreds of gigabytes
 of data together with more or less frequent connection interruptions.
 </p>
 <ul>
+<li>XtreemFS
+
+</li>
+</ul>
+<p>
+IMHO XtreemFS provides a similar approach to <a
+href="../classes/ProxyFS.html">ProxyFS</a>. Looks a bit full blown.
+</p>
+<ul>
+<li>GlusterFS
+
+</li>
+</ul>
+<p>
+GlusterFS&#8216;s geo-replication feature seems to be promising.
+</p>
+<ul>
 <li><b><a href="../classes/ProxyFS.html">ProxyFS</a></b>
 
 </li>
@@ -292,8 +304,15 @@ or minute). Therefore, you better don&#8216;t use it for replicating log
 files still in use, for example.
 </p>
 <p>
+Don&#8216;t do any writes to the replicated directories on the mirrors
+directly, i.e. circumventing <a href="../classes/ProxyFS.html">ProxyFS</a>.
+If you write directly on a mirror to the replicated directories, <a
+href="../classes/ProxyFS.html">ProxyFS</a> can of course not keep the
+directories synchronized.
+</p>
+<p>
 <a href="../classes/ProxyFS.html">ProxyFS</a> does not exactly behave
-<em>as usual</em> in a few ways:
+<em>as usual</em> filesystems in a few ways:
 </p>
 <ul>
 <li><tt>touch</tt> is not yet supported.
@@ -308,29 +327,17 @@ href="../classes/ProxyFS.html">ProxyFS</a> will possibly use this feature
 in the future.
 </p>
 </li>
-<li>Empty files possibly won&#8216;t be created.
-
-<pre>
-  stream = open(&quot;test.txt&quot;, &quot;w&quot;)
-  stream.close
-</pre>
-<p>
-won&#8216;t create a file <tt>test.txt</tt>, but
-</p>
-<pre>
-  stream = open(&quot;test.txt&quot;, &quot;w&quot;)
-  stream.write &quot;test&quot;
-  stream.close
-</pre>
-<p>
-will <b>of course</b> create a new file <tt>test.txt</tt>.
-</p>
-</li>
 <li>A file&#8216;s timestamp will be different on each mirror, because <a
 href="../classes/ProxyFS.html">ProxyFS</a> does not mind, yet. The
 timestamp will be equal to the time of transfer on each mirror. Possibly,
 this behaviour will change in the future, when SFTP <tt>file attribute</tt>
 manipulation will be used by <a href="../classes/ProxyFS.html">ProxyFS</a>.
+
+</li>
+<li><tt>mv</tt> will remove the file and re-create it for the new name.
+
+</li>
+<li><tt>mv</tt> for directories won&#8216;t work.
 
 </li>
 </ul>
